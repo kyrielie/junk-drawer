@@ -1,0 +1,107 @@
+<!-- HEAVY-MAILER | id:mailer-columbia-01 | sender:columbia | z:9 | speed:0.38 -->
+  <div class="kraft-mailer" aria-label="Columbia House Music Club CD shipment mailer, September 1997">
+
+    <!-- EXTERIOR — kraft cardboard face -->
+    <div class="kraft-mailer__exterior">
+
+      <!-- Corporate logo band -->
+      <div class="kraft-mailer__logo-band">
+        <svg class="kraft-mailer__logo-svg" viewBox="0 0 180 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- Stylised "CH" wordmark in single-color ink -->
+          <text x="4" y="24" font-family="'Special Elite', serif" font-size="22" fill="#1A1A1A" letter-spacing="2">Columbia House</text>
+          <line x1="4" y1="28" x2="176" y2="28" stroke="#1A1A1A" stroke-width="1.5"/>
+        </svg>
+        <div class="kraft-mailer__logo-sub">Music Club</div>
+      </div>
+
+      <!-- White adhesive shipping label -->
+      <div class="kraft-mailer__label">
+
+        <!-- Return address — dot-matrix style -->
+        <div class="kraft-mailer__return">
+          <span class="kraft-mailer__return-line">COLUMBIA HOUSE MUSIC CLUB</span>
+          <span class="kraft-mailer__return-line">1400 N FRUITRIDGE AVE</span>
+          <span class="kraft-mailer__return-line">TERRE HAUTE IN 47812</span>
+        </div>
+
+        <!-- Permit block — "U.S. Postage Paid" Media Mail style -->
+        <div class="permit-block permit-block--dotmatrix" aria-label="US Postage Paid Media Mail">
+          <span class="permit-block__line">U.S. POSTAGE</span>
+          <span class="permit-block__line">PAID</span>
+          <span class="permit-block__line">TERRE HAUTE IN</span>
+          <span class="permit-block__line permit-block__permit">PERMIT NO. 872</span>
+          <span class="permit-block__line">MEDIA MAIL</span>
+        </div>
+
+        <!-- Recipient address — dot-matrix font -->
+        <div class="mail-address mail-address--dotmatrix kraft-mailer__recipient">
+          <span class="mail-address__name">{{recipient.name}}</span>
+          <span class="mail-address__line">{{recipient.address}}</span>
+          <span class="mail-address__line">{{recipient.city}} {{recipient.state}}  {{recipient.zip}}-0000</span>
+        </div>
+
+        <!-- Thick primitive tracking barcode -->
+        <div class="barcode barcode--thick" data-zip="{{recipient.zip}}" aria-hidden="true"></div>
+
+        <!-- Member/account number -->
+        <div class="kraft-mailer__acct">MEMBER #: 4471-882-09 &nbsp;|&nbsp; SHIPMENT #: 7 OF 12</div>
+      </div>
+
+      <!-- "DO NOT BEND" notice -->
+      <div class="kraft-mailer__notice">
+        <svg viewBox="0 0 120 22" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="0" y="0" width="120" height="22" fill="none" stroke="#1A1A1A" stroke-width="1.5"/>
+          <text x="60" y="15" text-anchor="middle" font-family="'Courier Prime', monospace" font-size="10" font-weight="bold" fill="#1A1A1A">DO NOT BEND</text>
+        </svg>
+      </div>
+
+    </div>
+
+    <!-- INTERIOR — visible when "opened" (img-frame for bubble wrap + invoice) -->
+    <div class="kraft-mailer__interior" aria-hidden="true">
+
+      <!-- Bubble wrap suggestion -->
+      <div class="kraft-mailer__bubble-wrap"></div>
+
+      <!-- Invoice slip -->
+      <div class="kraft-mailer__invoice">
+        <div class="kraft-mailer__invoice-header">
+          <span>COLUMBIA HOUSE MUSIC CLUB</span>
+          <span>MEMBER INVOICE</span>
+        </div>
+
+        <div class="kraft-mailer__invoice-row">
+          <span class="kraft-mailer__invoice-label">SELECTION OF THE MONTH:</span>
+          <span class="kraft-mailer__invoice-value">Automatic — per your membership</span>
+        </div>
+        <div class="kraft-mailer__invoice-row">
+          <span class="kraft-mailer__invoice-label">TITLE:</span>
+          <span class="kraft-mailer__invoice-value">Fleetwood Mac — <em>The Dance</em></span>
+        </div>
+        <div class="kraft-mailer__invoice-row">
+          <span class="kraft-mailer__invoice-label">FORMAT:</span>
+          <span class="kraft-mailer__invoice-value">Compact Disc (1 CD)</span>
+        </div>
+        <div class="kraft-mailer__invoice-row">
+          <span class="kraft-mailer__invoice-label">MEMBER PRICE:</span>
+          <span class="kraft-mailer__invoice-value">$15.98 + $2.49 S&amp;H</span>
+        </div>
+        <div class="kraft-mailer__invoice-row kraft-mailer__invoice-row--total">
+          <span class="kraft-mailer__invoice-label">AMOUNT DUE:</span>
+          <span class="kraft-mailer__invoice-value">$18.47</span>
+        </div>
+
+        <div class="kraft-mailer__invoice-note">
+          To decline future selections, return the reply card by the 10th of the month.
+          If the reply card is not returned, the featured selection will be sent automatically.
+          You are committed to purchasing 4 more selections at regular Club prices.
+        </div>
+
+        <div class="kraft-mailer__invoice-footer">
+          Questions? Call 1-800-555-0192 Mon–Fri 8am–8pm EST
+        </div>
+      </div>
+
+    </div>
+
+  </div>

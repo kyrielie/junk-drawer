@@ -1,0 +1,171 @@
+<!-- TRI-FOLD-SUMMONS | id:summons-court-01 | sender:court | z:14 | speed:0.60 -->
+  <div class="summons" aria-label="{{sender.name}} juror summons, March 1998">
+
+    <!-- EXTERIOR PANEL (visible when folded) -->
+    <div class="summons__exterior">
+
+      <!-- Government seal -->
+      <div class="summons__seal-block">
+        <svg class="summons__seal" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-label="Jackson County Oregon seal">
+          <circle cx="32" cy="32" r="30" fill="none" stroke="#1A1A1A" stroke-width="2"/>
+          <circle cx="32" cy="32" r="24" fill="none" stroke="#1A1A1A" stroke-width="0.75"/>
+          <!-- Stars around ring -->
+          <text x="32" y="10"  text-anchor="middle" font-size="5" fill="#1A1A1A">★</text>
+          <text x="50" y="20"  text-anchor="middle" font-size="5" fill="#1A1A1A">★</text>
+          <text x="55" y="38"  text-anchor="middle" font-size="5" fill="#1A1A1A">★</text>
+          <text x="44" y="55"  text-anchor="middle" font-size="5" fill="#1A1A1A">★</text>
+          <text x="22" y="58"  text-anchor="middle" font-size="5" fill="#1A1A1A">★</text>
+          <text x="10" y="44"  text-anchor="middle" font-size="5" fill="#1A1A1A">★</text>
+          <text x="9"  y="26"  text-anchor="middle" font-size="5" fill="#1A1A1A">★</text>
+          <text x="18" y="11"  text-anchor="middle" font-size="5" fill="#1A1A1A">★</text>
+          <!-- Center text -->
+          <text x="32" y="28" text-anchor="middle" font-family="'Special Elite',serif" font-size="5.5" fill="#1A1A1A">JACKSON</text>
+          <text x="32" y="36" text-anchor="middle" font-family="'Special Elite',serif" font-size="5.5" fill="#1A1A1A">COUNTY</text>
+          <text x="32" y="44" text-anchor="middle" font-family="'Special Elite',serif" font-size="4.5" fill="#1A1A1A">OREGON</text>
+        </svg>
+      </div>
+
+      <!-- Urgent exterior copy -->
+      <div class="summons__urgent-label">OFFICIAL JURY SUMMONS</div>
+      <div class="summons__open-notice">OPEN IMMEDIATELY — LEGAL DOCUMENT</div>
+      <div class="summons__penalty-note">Failure to respond is punishable by fine or contempt of court.<br>See Oregon Revised Statutes § 10.040.</div>
+
+      <!-- Address panel + govt permit -->
+      <div class="summons__address-panel">
+        <div class="permit-block permit-block--govt" aria-label="Official Government Mail">
+          <span class="permit-block__line">OFFICIAL</span>
+          <span class="permit-block__line">BUSINESS</span>
+          <span class="permit-block__line permit-block__permit">US POSTAGE</span>
+          <span class="permit-block__line permit-block__permit">PAID</span>
+          <span class="permit-block__line permit-block__permit">PERMIT NO. 1</span>
+        </div>
+
+        <div class="mail-address mail-address--typed summons__recipient">
+          <span class="mail-address__name">{{recipient.name}}</span>
+          <span class="mail-address__line">{{recipient.address}}</span>
+          <span class="mail-address__line">{{recipient.city}}, {{recipient.state}}  {{recipient.zip}}</span>
+        </div>
+
+        <div class="barcode" data-zip="{{recipient.zip}}" aria-hidden="true"></div>
+      </div>
+
+      <!-- Perforated glue-seal strips on edges -->
+      <div class="summons__perf-edge summons__perf-edge--top" aria-hidden="true"></div>
+      <div class="summons__perf-edge summons__perf-edge--bottom" aria-hidden="true"></div>
+
+    </div>
+
+    <!-- INTERIOR — opens to full 8.5×14 sheet -->
+    <div class="summons__interior">
+
+      <!-- Header -->
+      <div class="summons__interior-header">
+        <div class="summons__court-name">IN THE CIRCUIT COURT OF THE STATE OF OREGON</div>
+        <div class="summons__court-name">FOR JACKSON COUNTY</div>
+        <div class="summons__interior-sub">Office of Jury Management · {{sender.address}} · {{sender.city}}, {{sender.state}} {{sender.zip}}</div>
+        <div class="summons__interior-sub">(541) 776-7171</div>
+      </div>
+
+      <!-- Summons details grid -->
+      <div class="summons__details-grid">
+        <div class="summons__detail-row">
+          <span class="summons__detail-label">JUROR NAME:</span>
+          <span class="summons__detail-value">{{recipient.name}}</span>
+        </div>
+        <div class="summons__detail-row">
+          <span class="summons__detail-label">REPORT DATE:</span>
+          <span class="summons__detail-value">Monday, April 13, 1998</span>
+        </div>
+        <div class="summons__detail-row">
+          <span class="summons__detail-label">REPORT TIME:</span>
+          <span class="summons__detail-value">8:00 A.M.</span>
+        </div>
+        <div class="summons__detail-row">
+          <span class="summons__detail-label">REPORT TO:</span>
+          <span class="summons__detail-value">Jackson County Courthouse · Jury Assembly Room, 2nd Floor</span>
+        </div>
+        <div class="summons__detail-row">
+          <span class="summons__detail-label">GROUP NUMBER:</span>
+          <span class="summons__detail-value">Group 4</span>
+        </div>
+        <div class="summons__detail-row">
+          <span class="summons__detail-label">BADGE NUMBER:</span>
+          <span class="summons__detail-value">4-8812</span>
+        </div>
+        <div class="summons__detail-row">
+          <span class="summons__detail-label">TERM OF SERVICE:</span>
+          <span class="summons__detail-value">One day or one trial</span>
+        </div>
+        <div class="summons__detail-row">
+          <span class="summons__detail-label">JUROR COMPENSATION:</span>
+          <span class="summons__detail-value">$10.00 per day + mileage at $0.285/mile</span>
+        </div>
+      </div>
+
+      <!-- Instructions -->
+      <div class="summons__instructions">
+        <p><strong>WHAT TO DO:</strong> Read this notice carefully. Complete and return the Juror Questionnaire below by <strong>March 31, 1998</strong>. Keep the upper portion of this notice for your records. Bring it with you on your report date.</p>
+        <p>If you have a conflict that prevents your service, you may request a postponement. Postponements are limited to once per 24-month period and must be requested in writing by April 6, 1998.</p>
+        <p>Call (541) 776-7171 after 5:00 P.M. the business day before your report date to confirm whether your group has been called.</p>
+      </div>
+
+      <!-- Tear-off questionnaire -->
+      <div class="summons__tear-line" aria-hidden="true">
+        <span>✂ ─ ─ ─ ─ DETACH AND RETURN THIS PORTION ─ ─ ─ ─ ✂</span>
+      </div>
+
+      <div class="summons__questionnaire">
+        <div class="summons__q-header">JUROR QUESTIONNAIRE — {{sender.name}} · Badge No. 4-8812</div>
+
+        <div class="summons__q-body">
+          <div class="summons__q-row">
+            <span class="summons__q-label">Full Legal Name:</span>
+            <span class="summons__q-field">{{recipient.name}}</span>
+          </div>
+          <div class="summons__q-row">
+            <span class="summons__q-label">Date of Birth:</span>
+            <span class="summons__q-field summons__q-field--blank">_____ / _____ / _________</span>
+          </div>
+          <div class="summons__q-row">
+            <span class="summons__q-label">Address:</span>
+            <span class="summons__q-field">{{recipient.address}}, {{recipient.city}}, {{recipient.state}} {{recipient.zip}}</span>
+          </div>
+          <div class="summons__q-row">
+            <span class="summons__q-label">Daytime Phone:</span>
+            <span class="summons__q-field summons__q-field--blank">(___) ___-_______</span>
+          </div>
+          <div class="summons__q-row">
+            <span class="summons__q-label">Are you a U.S. citizen?</span>
+            <span class="summons__q-field">☐ Yes &nbsp; ☐ No</span>
+          </div>
+          <div class="summons__q-row">
+            <span class="summons__q-label">Have you served on a jury in the last 2 years?</span>
+            <span class="summons__q-field">☐ Yes &nbsp; ☐ No</span>
+          </div>
+          <div class="summons__q-row">
+            <span class="summons__q-label">Do you require a postponement?</span>
+            <span class="summons__q-field">☐ Yes &nbsp; ☐ No</span>
+          </div>
+        </div>
+
+        <!-- Signature line — required under penalty of perjury -->
+        <div class="summons__sig-block">
+          <div class="summons__sig-notice">I certify under penalty of perjury under the laws of the State of Oregon that the foregoing is true and correct.</div>
+          <div class="summons__sig-row">
+            <span class="summons__sig-label">Signature:</span>
+            <span class="summons__sig-line">X _______________________________________________</span>
+          </div>
+          <div class="summons__sig-row">
+            <span class="summons__sig-label">Date:</span>
+            <span class="summons__sig-line">_____________________</span>
+          </div>
+        </div>
+
+        <!-- Courthouse checkin barcode -->
+        <div class="barcode barcode--wide" data-zip="4-8812" aria-hidden="true"></div>
+        <div class="summons__q-footer">Return to: {{sender.name}} · Jury Management · {{sender.address}} · {{sender.city}}, {{sender.state}} {{sender.zip}}</div>
+      </div>
+
+    </div>
+
+  </div>

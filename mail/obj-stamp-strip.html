@@ -1,0 +1,33 @@
+<!-- OBJECT | id:obj-stamp-strip | sender:null | z:13 | speed:0.14 -->
+<div class="obj-stamp-strip">
+  <svg width="220" height="72" viewBox="0 0 220 72" xmlns="http://www.w3.org/2000/svg" aria-label="{{config.objects.stampStripLabel}}">
+
+    <!-- Shared perf path macro — repeated 4 times via transform -->
+    <defs>
+      <symbol id="stamp-unit" viewBox="0 0 52 68">
+        <rect x="3" y="3" width="46" height="62" fill="var(--color-aged-paper)"/>
+        <rect x="6" y="6" width="40" height="50" fill="{{config.objects.stampStripBg}}"/>
+        <!-- Tree silhouette paths -->
+        <polygon points="23,12 33,28 13,28" fill="{{config.objects.stampStripMotifColor}}" opacity="0.85"/>
+        <polygon points="23,18 35,34 11,34" fill="{{config.objects.stampStripMotifColor}}" opacity="0.9"/>
+        <polygon points="23,24 37,40 9,40" fill="{{config.objects.stampStripMotifColor}}" opacity="0.8"/>
+        <rect x="20" y="40" width="6" height="10" fill="#4A3828"/>
+        <text x="23" y="62" text-anchor="middle" font-family="var(--font-body)" font-size="7" fill="var(--color-ink-black)" font-weight="700">{{config.objects.stampStripDenom}}</text>
+        <!-- Perf edge (top/bottom only for strip) -->
+        <path d="M3,0 Q5,-2 7,0 Q9,-2 11,0 Q13,-2 15,0 Q17,-2 19,0 Q21,-2 23,0 Q25,-2 27,0 Q29,-2 31,0 Q33,-2 35,0 Q37,-2 39,0 Q41,-2 43,0 Q45,-2 47,0 Q49,-2 51,0" fill="none" stroke="var(--color-paper-white)" stroke-width="3"/>
+        <path d="M3,68 Q5,70 7,68 Q9,70 11,68 Q13,70 15,68 Q17,70 19,68 Q21,70 23,68 Q25,70 27,68 Q29,70 31,68 Q33,70 35,68 Q37,70 39,68 Q41,70 43,68 Q45,70 47,68 Q49,70 51,68" fill="none" stroke="var(--color-paper-white)" stroke-width="3"/>
+      </symbol>
+    </defs>
+
+    <use href="#stamp-unit" x="0"   y="2" width="52" height="68"/>
+    <use href="#stamp-unit" x="56"  y="2" width="52" height="68"/>
+    <use href="#stamp-unit" x="112" y="2" width="52" height="68"/>
+    <use href="#stamp-unit" x="168" y="2" width="52" height="68"/>
+
+    <!-- Perforations between stamps -->
+    <line x1="54"  y1="2" x2="54"  y2="70" stroke="var(--color-paper-white)" stroke-width="3" stroke-dasharray="3,3"/>
+    <line x1="110" y1="2" x2="110" y2="70" stroke="var(--color-paper-white)" stroke-width="3" stroke-dasharray="3,3"/>
+    <line x1="166" y1="2" x2="166" y2="70" stroke="var(--color-paper-white)" stroke-width="3" stroke-dasharray="3,3"/>
+
+  </svg>
+</div>

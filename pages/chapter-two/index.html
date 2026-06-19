@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Postcard, Chapter Two — a second drawer of found mail." />
+  <meta name="theme-color" content="#C8B99A" />
+  <meta property="og:title"        content="Postcard — Chapter Two" />
+  <meta property="og:description"  content="Letters, postcards, and the things people leave behind." />
+  <meta property="og:type"         content="website" />
+  <meta property="og:image"        content="../../assets/og-preview.jpg" />
+  <meta name="twitter:card"        content="summary_large_image" />
+  <title>Postcard — Chapter Two</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Caveat:wght@400;600;700&family=Special+Elite&family=IM+Fell+English:ital@0;1&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="../../css/main.css" />
+</head>
+
+<body>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       This page is the "second chapter" scaffold described in
+       world.config.js's "ADDING A NEW PAGE" checklist: same drawer+canvas
+       shell as the root index.html, loading its own (currently empty)
+       manifest via loader.js's window.POSTCARD_MANIFEST override below.
+       WORLD (senders, postmarks, recipient) is still shared from the
+       project-root world.config.js — every chapter draws from the same
+       single source of truth, only the mail-piece list differs per page.
+       ══════════════════════════════════════════════════════════════════════ -->
+
+  <!-- Minimal way back to chapter one — no nav system exists yet beyond this. -->
+  <a href="../../index.html" id="chapter-back-link">&larr; Chapter One</a>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       CANVAS — the desk surface, visible on load under the drawer.
+       Mail pile lives here. Drawer slides down over it on close.
+       ══════════════════════════════════════════════════════════════════════ -->
+  <div id="canvas" class="canvas--pile" role="main"
+       aria-label="Pile of mail on the desk">
+    <!-- loader.js injects .mail-piece elements here -->
+  </div>
+
+  <!-- Floor / side rails as desk frame -->
+  <div id="drawer-floor" aria-hidden="true"></div>
+  <div id="scroll-progress" aria-hidden="true"></div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       DRAWER — the front face. Sits on top covering the desk on load.
+       Pull tab at top; pulling slides drawer DOWN revealing desk below.
+       "Send to drawer" moves pieces from #canvas INTO #drawer-pile.
+       ══════════════════════════════════════════════════════════════════════ -->
+  <div id="drawer" aria-hidden="true" role="complementary" aria-label="Mail drawer">
+
+    <div id="drawer-face">
+
+      <!-- Drawer label -->
+      <div id="drawer-label">
+        <span id="drawer-wordmark">Postcard — Chapter Two</span>
+        <p id="drawer-subtitle">a second drawer of found mail</p>
+      </div>
+
+      <!-- ── DRAWER PILE — pieces sent here from the desk ── -->
+      <div id="drawer-pile" aria-label="Mail sorted into the drawer">
+        <!-- rustle.js injects pieces here when "Send to drawer" is clicked -->
+        <div id="drawer-pile-empty" aria-hidden="true">
+          <span>drawer is empty</span>
+        </div>
+      </div>
+
+      <!-- Pull tab — at the TOP of the drawer face -->
+      <div id="pull-tab-wrapper">
+        <button
+          id="pull-tab"
+          aria-label="Pull the drawer open to reveal the desk"
+          aria-expanded="false"
+          aria-controls="canvas"
+        >
+          <svg
+            id="pull-tab-svg"
+            viewBox="0 0 160 72"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <rect x="2" y="0" width="156" height="60" rx="0"
+                  fill="#C8A870" stroke="rgba(80,55,30,0.45)" stroke-width="1"/>
+            <rect x="5" y="13" width="150" height="42" rx="0"
+                  fill="none" stroke="rgba(255,240,200,0.22)" stroke-width="0.75"/>
+            <circle cx="10" cy="20" r="2.5" fill="rgba(80,55,30,0.18)"/>
+            <circle cx="10" cy="30" r="2.5" fill="rgba(80,55,30,0.18)"/>
+            <circle cx="10" cy="40" r="2.5" fill="rgba(80,55,30,0.18)"/>
+            <circle cx="10" cy="50" r="2.5" fill="rgba(80,55,30,0.18)"/>
+            <circle cx="150" cy="20" r="2.5" fill="rgba(80,55,30,0.18)"/>
+            <circle cx="150" cy="30" r="2.5" fill="rgba(80,55,30,0.18)"/>
+            <circle cx="150" cy="40" r="2.5" fill="rgba(80,55,30,0.18)"/>
+            <circle cx="150" cy="50" r="2.5" fill="rgba(80,55,30,0.18)"/>
+            <text x="80" y="30"
+                  text-anchor="middle"
+                  font-family="'Special Elite', serif"
+                  font-size="11"
+                  fill="rgba(80,55,30,0.75)"
+                  letter-spacing="3">PULL</text>
+            <path d="M56,36 L80,50 L104,36" fill="none"
+                  stroke="rgba(80,55,30,0.55)" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M2,68 Q10,72 18,68 Q26,64 34,68 Q42,72 50,68
+                     Q58,64 66,68 Q74,72 82,68 Q90,64 98,68
+                     Q106,72 114,68 Q122,64 130,68 Q138,72 146,68
+                     Q152,64 158,68 L158,58 L2,58 Z"
+                  fill="#B8956A"/>
+          </svg>
+          <span id="pull-tab-hint" aria-hidden="true">pull down &nbsp;·&nbsp; or press <kbd>Space</kbd></span>
+        </button>
+      </div>
+
+    </div><!-- /drawer-face -->
+  </div><!-- /drawer -->
+
+  <script>
+    // Tell the shared loader.js to load THIS page's manifest instead of
+    // chapter one's. IMPORTANT: this path is resolved relative to
+    // js/loader.js's own URL (same rule as a static import), NOT relative
+    // to this page — loader.js lives one level up from the project root,
+    // so one ../ reaches the root, then pages/chapter-two/manifest.js from
+    // there. (Using two ../ here looks "more correct" for a page two
+    // levels deep, but it isn't: it would only work by accident when
+    // served from a domain root, since URLs silently clamp extra ../ at
+    // the root — and silently break once this site is served from a
+    // GitHub Pages project subpath, e.g. username.github.io/postcard/.)
+    window.POSTCARD_MANIFEST = '../pages/chapter-two/manifest.js';
+  </script>
+  <script type="module" src="../../js/loader.js"></script>
+  <script type="module" src="../../js/rustle.js"></script>
+
+  <script>
+  // ── DRAWER PULL MECHANIC ──────────────────────────────────────────────────
+  // Identical to index.html's copy — kept inline per the project's existing
+  // "no shared bundler, no build step" convention. If this drifts from
+  // index.html's version again in the future, that's worth promoting to a
+  // shared js/drawer.js module rather than re-copy-pasting a third time.
+  (function () {
+    var drawer   = document.getElementById('drawer');
+    var tab      = document.getElementById('pull-tab');
+    var canvas   = document.getElementById('canvas');
+    var isOpen   = false;
+
+    var dragStart   = null;
+    var dragCurrent = 0;
+    var dragging    = false;
+
+    function openDrawer(animate) {
+      if (isOpen) return;
+      isOpen = true;
+      drawer.classList.add(animate === false ? 'drawer--open-instant' : 'drawer--open');
+      drawer.setAttribute('aria-hidden', 'true');
+      canvas.setAttribute('aria-hidden', 'false');
+      tab.setAttribute('aria-expanded', 'true');
+      document.dispatchEvent(new CustomEvent('drawer:open'));
+      setTimeout(function () { addRetractHandle(); }, animate === false ? 0 : 1100);
+    }
+
+    function closeDrawer() {
+      if (!isOpen) return;
+      isOpen = false;
+      drawer.classList.remove('drawer--open', 'drawer--open-instant');
+      drawer.classList.add('drawer--closing');
+      drawer.setAttribute('aria-hidden', 'false');
+      canvas.setAttribute('aria-hidden', 'true');
+      tab.setAttribute('aria-expanded', 'false');
+      document.dispatchEvent(new CustomEvent('drawer:close'));
+      var handleWrapper = document.getElementById('retract-handle-wrapper');
+      if (handleWrapper) handleWrapper.remove();
+      setTimeout(function () {
+        drawer.classList.remove('drawer--closing');
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      }, 1100);
+    }
+
+    function addRetractHandle() {
+      if (document.getElementById('retract-handle-wrapper')) return;
+
+      var wrapper = document.createElement('div');
+      wrapper.id  = 'retract-handle-wrapper';
+
+      var handle = document.createElement('button');
+      handle.id        = 'retract-handle';
+      handle.innerHTML = '<span>▲ close drawer</span>';
+      handle.setAttribute('aria-label', 'Pull up to close the mail drawer');
+      handle.setAttribute('aria-expanded', 'true');
+      handle.setAttribute('aria-controls', 'canvas');
+
+      wrapper.appendChild(handle);
+      document.body.appendChild(wrapper);
+
+      bindRetractHandle(handle);
+    }
+
+    function killRetractBob(handle) { handle.style.animation = 'none'; }
+
+    function bindRetractHandle(handle) {
+      var closeDragStart   = null;
+      var closeDragCurrent = 0;
+      var closeDragging    = false;
+
+      handle.addEventListener('click', function (e) {
+        if (closeDragging) return;
+        killRetractBob(handle);
+        closeDrawer();
+      });
+
+      handle.addEventListener('keydown', function (e) {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          killRetractBob(handle);
+          closeDrawer();
+        }
+      });
+
+      handle.addEventListener('pointerdown', function (e) {
+        closeDragStart   = e.clientY;
+        closeDragCurrent = 0;
+        closeDragging    = false;
+        handle.setPointerCapture(e.pointerId);
+      });
+
+      handle.addEventListener('pointermove', function (e) {
+        if (closeDragStart === null) return;
+        var delta = e.clientY - closeDragStart;
+        if (Math.abs(delta) > 6) closeDragging = true;
+        if (!closeDragging) return;
+        var openOffset = window.innerHeight + 80;
+        var pulled     = Math.max(0, -delta);
+        closeDragCurrent = pulled;
+        var clamped    = Math.max(0, openOffset - pulled);
+        drawer.style.transition = 'none';
+        drawer.style.transform  = 'translateY(' + clamped + 'px)';
+      });
+
+      handle.addEventListener('pointerup', function (e) {
+        if (closeDragStart === null) return;
+        var didDrag = closeDragging;
+        closeDragging  = false;
+        closeDragStart = null;
+        drawer.style.transition = '';
+        drawer.style.transform  = '';
+        if (didDrag && closeDragCurrent > 80) { killRetractBob(handle); closeDrawer(); }
+      });
+    }
+
+    function killBob() { tab.style.animation = 'none'; }
+
+    tab.addEventListener('click', function (e) {
+      if (dragging) return;
+      killBob();
+      openDrawer(true);
+    });
+
+    tab.addEventListener('keydown', function (e) {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        killBob();
+        isOpen ? closeDrawer() : openDrawer(true);
+      }
+    });
+
+    tab.addEventListener('pointerdown', function (e) {
+      if (isOpen) return;
+      dragStart   = e.clientY;
+      dragCurrent = 0;
+      dragging    = false;
+      tab.setPointerCapture(e.pointerId);
+    });
+
+    tab.addEventListener('pointermove', function (e) {
+      if (dragStart === null) return;
+      var delta = e.clientY - dragStart;
+      if (Math.abs(delta) > 6) dragging = true;
+      if (!dragging) return;
+      var clamped = Math.max(0, delta);
+      dragCurrent = clamped;
+      drawer.style.transition = 'none';
+      drawer.style.transform  = 'translateY(' + clamped + 'px)';
+    });
+
+    tab.addEventListener('pointerup', function (e) {
+      if (dragStart === null) return;
+      var didDrag = dragging;
+      dragging    = false;
+      dragStart   = null;
+      drawer.style.transition = '';
+      drawer.style.transform  = '';
+      if (didDrag && dragCurrent > 80) { killBob(); openDrawer(true); }
+    });
+  })();
+  </script>
+
+</body>
+</html>

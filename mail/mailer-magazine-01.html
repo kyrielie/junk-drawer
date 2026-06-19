@@ -1,0 +1,40 @@
+<!-- MAILER | id:mailer-magazine-01 | sender:null | z:8 | speed:0.20 -->
+<div class="mailer-magazine" style="border:2px solid {{config.mailerMagazine.accentColor}};">
+
+  <div class="mailer-magazine__header" style="background:{{config.mailerMagazine.accentColor}};">
+    <div class="mailer-magazine__pub-name">
+      {{config.mailerMagazine.publicationName}}
+    </div>
+  </div>
+
+  <div class="mailer-magazine__hero">
+    <div class="mailer-magazine__offer" style="color:{{config.mailerMagazine.accentColor}};">
+      {{config.mailerMagazine.offerLine1}}<br>
+      <span class="mailer-magazine__price">{{config.mailerMagazine.price}}</span>
+    </div>
+    <div class="mailer-magazine__desc">
+      {{config.mailerMagazine.offerDesc}}
+    </div>
+  </div>
+
+  <div class="mailer-magazine__bullets">
+    {{config.mailerMagazine.bulletItem1}}<br>
+    {{config.mailerMagazine.bulletItem2}}<br>
+    {{config.mailerMagazine.bulletItem3}}<br>
+    <div class="mailer-magazine__promo" style="color:{{config.mailerMagazine.accentColor}};">
+      {{config.mailerMagazine.promoCode}}
+    </div>
+  </div>
+
+  <!-- Recipient window -->
+  <div class="envelope-window envelope-window--flow">
+    <div class="mail-address mail-address--window">
+      <span class="address-name">{{recipient.name}}</span><br>
+      <span class="address-street">{{recipient.address}}</span><br>
+      <span class="address-cityline">{{recipient.city}}, {{recipient.state}} {{recipient.zip}}</span>
+    </div>
+  </div>
+
+  <div class="barcode barcode--flow" data-zip="{{recipient.zip}}"></div>
+
+</div>

@@ -1,0 +1,43 @@
+<!-- MAILER | id:mailer-seeds-01 | sender:null | z:8 | speed:0.19 -->
+<div class="mailer-seeds" style="border:3px solid {{config.mailerSeeds.accentColor}};">
+
+  <div class="mailer-seeds__header" style="background:{{config.mailerSeeds.accentColor}};">
+    {{config.mailerSeeds.companyName}}
+  </div>
+
+  <div class="mailer-seeds__hero">
+    <!-- Seedling illustration -->
+    <svg class="mailer-seeds__seedling" width="36" height="44" viewBox="0 0 36 44" aria-hidden="true">
+      <rect x="16" y="18" width="3" height="22" fill="#4B6B3A"/>
+      <ellipse cx="12" cy="28" rx="8" ry="5" fill="#4B6B3A" transform="rotate(-30 12 28)"/>
+      <ellipse cx="24" cy="24" rx="8" ry="5" fill="#3D5A2E" transform="rotate(25 24 24)"/>
+      <ellipse cx="17" cy="12" rx="8" ry="10" fill="#5A7A44" opacity="0.9"/>
+      <ellipse cx="17" cy="10" rx="5" ry="7" fill="#6A8A50" opacity="0.7"/>
+    </svg>
+    <div class="mailer-seeds__hero-copy">
+      <strong>{{config.mailerSeeds.catalogTitle}}</strong><br>
+      {{config.mailerSeeds.catalogDesc}}<br>
+      <em>{{config.mailerSeeds.freeShipping}}</em>
+    </div>
+  </div>
+
+  <div class="mailer-seeds__featured">
+    {{config.mailerSeeds.featured}}
+  </div>
+
+  <div class="mailer-seeds__strip" style="background:{{config.mailerSeeds.accentColor}};">
+    {{config.mailerSeeds.offerStrip}}
+  </div>
+
+  <!-- Recipient window -->
+  <div class="envelope-window envelope-window--flow">
+    <div class="mail-address mail-address--window">
+      <span class="address-name">{{recipient.name}}</span><br>
+      <span class="address-street">{{recipient.address}}</span><br>
+      <span class="address-cityline">{{recipient.city}}, {{recipient.state}} {{recipient.zip}}</span>
+    </div>
+  </div>
+
+  <div class="barcode barcode--flow" data-zip="{{recipient.zip}}"></div>
+
+</div>

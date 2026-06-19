@@ -1,0 +1,148 @@
+<!-- ENVELOPE+LETTER | id:letter-ex-01 | sender:ex | z:10 | speed:0.42 -->
+
+<!--
+  DOM structure (back to front):
+    .envelope.envelope--personal.envelope--creased
+      .envelope-back      z:1  cream paper body
+      .letter-peek        z:2  folded letter inside pocket
+      .envelope-flap      z:3  torn flap; swings out on open
+      .envelope-front     z:4  front face with hand-addressed content
+-->
+
+<div class="envelope envelope--personal envelope--creased" data-open="false">
+
+  <!-- z:1 ── Back paper body ─────────────────────────────────── -->
+  <div class="envelope-back" aria-hidden="true"></div>
+
+  <!-- z:2 ── Letter (inside pocket) ──────────────────────────── -->
+  <div class="letter-peek letter-peek--folded">
+    <div class="letter-content" aria-hidden="true">
+      <div class="letter letter--personal">
+
+        <div class="letter-page letter-page--1">
+          <div class="fold-mark" aria-hidden="true"></div>
+          <div class="fold-mark fold-mark--lower" aria-hidden="true"></div>
+
+          <div class="letter-header-block">
+            <span class="handwritten letter-date">January 3rd</span>
+            <span class="handwritten letter-salutation">Clara —</span>
+          </div>
+
+          <div class="letter-body">
+            <p class="handwritten handwritten--letter">
+              I've started this three times now. Thrown out two
+              sheets already. I don't know why it's hard to
+              write something I could just say on the phone, but
+              here we are. Probably because you'd just interrupt me.
+            </p>
+            <p class="handwritten handwritten--letter">
+              I found the box. The one you left in the hall closet
+              behind the spare towels where you thought I wouldn't
+              look. I didn't open it. I don't know why I'm telling
+              you that, but I want you to know I didn't open it.
+            </p>
+            <p class="handwritten handwritten--letter">
+              Portland is fine. The apartment is quieter than I
+              thought an apartment could be, which is stupid because
+              that's the whole point of living alone. I got a cat.
+              His name is Gerald and he's awful.
+            </p>
+          </div>
+        </div>
+
+        <div class="letter-page letter-page--2">
+          <div class="fold-mark" aria-hidden="true"></div>
+
+          <div class="letter-body">
+            <p class="handwritten handwritten--letter">
+              Margot says hi, by the way. She called me looking
+              for you, which tells me you haven't returned her
+              calls either, so at least you're consistent.
+            </p>
+            <p class="handwritten handwritten--letter">
+              I don't want anything from you. I want you to know
+              that. I'm not writing to ask for the lamp back or
+              rehash what I said at Ryan's party. I'm writing
+              because I found your blue cardigan in the coat
+              closet and I've been wearing it and I feel terrible
+              about that, and I just wanted someone to know.
+            </p>
+            <p class="handwritten handwritten--letter">
+              You don't have to write back.
+            </p>
+          </div>
+
+          <div class="letter-sign-off">
+            <span class="handwritten letter-closing">— T.</span>
+          </div>
+        </div>
+
+      </div><!-- /letter -->
+    </div><!-- /letter-content -->
+  </div><!-- /letter-peek -->
+
+  <!-- z:3 ── Flap (torn; swings out from behind front face) ──── -->
+  <div class="envelope-flap envelope-flap--torn" aria-hidden="true">
+    <div class="envelope-flap-inner"></div>
+  </div>
+
+  <!-- z:4 ── Front face ─────────────────────────────────────── -->
+  <div class="envelope-front">
+
+    <!-- Return address — handwritten -->
+    <div class="envelope-return-address envelope-return-address--handwritten">
+      <address class="mail-address mail-address--from">
+        <span class="handwritten address-name">{{sender.name}}</span>
+        <span class="handwritten address-street">{{sender.address}}</span>
+        <span class="handwritten address-cityline">{{sender.city}}, {{sender.state}}</span>
+      </address>
+    </div>
+
+    <!-- Stamp: landscape 32¢ -->
+    <div class="stamp stamp--landscape stamp--envelope" aria-label="32 cent landscape stamp">
+      <svg class="stamp-svg" viewBox="0 0 52 62" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path class="stamp-perf" d="
+          M4,2 Q6,0 8,2 Q10,4 12,2 Q14,0 16,2 Q18,4 20,2 Q22,0 24,2 Q26,4 28,2
+          Q30,0 32,2 Q34,4 36,2 Q38,0 40,2 Q42,4 44,2 Q46,0 48,2 Q50,4 52,2
+          L52,60 Q50,62 48,60 Q46,58 44,60 Q42,62 40,60 Q38,58 36,60 Q34,62 32,60
+          Q30,58 28,60 Q26,62 24,60 Q22,58 20,60 Q18,62 16,60 Q14,58 12,60
+          Q10,62 8,60 Q6,58 4,60 Q2,62 0,60
+          L0,2 Q2,0 4,2 Z
+        "/>
+        <rect x="4" y="4" width="44" height="54" fill="var(--color-aged-paper)"/>
+        <rect x="4"  y="30" width="44" height="28" fill="#8CB87A"/>
+        <rect x="4"  y="16" width="44" height="18" fill="#B8D4E8"/>
+        <polygon points="26,14 14,32 38,32" fill="#8A9BAA"/>
+        <polygon points="26,14 21,22 31,22" fill="var(--color-paper-white)"/>
+        <circle cx="38" cy="20" r="4" fill="#F5C842"/>
+        <text x="26" y="56" text-anchor="middle" class="stamp-denom">32¢</text>
+      </svg>
+    </div>
+
+    <!-- Postmark -->
+    <div class="postmark postmark--blue postmark--envelope" aria-label="Postmarked {{postmark}}">
+      <svg viewBox="0 0 80 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M52,6 Q60,9 68,6 Q76,3 80,6 L80,30 Q76,33 68,30 Q60,27 52,30 Q44,33 36,30 L36,6 Q44,3 52,6Z"
+              fill="none" stroke="var(--color-stamp-blue)" stroke-width="1"/>
+        <line x1="38" y1="12" x2="78" y2="12" stroke="var(--color-stamp-blue)" stroke-width="0.75"/>
+        <line x1="38" y1="18" x2="78" y2="18" stroke="var(--color-stamp-blue)" stroke-width="0.75"/>
+        <line x1="38" y1="24" x2="78" y2="24" stroke="var(--color-stamp-blue)" stroke-width="0.75"/>
+        <text x="18" y="10" text-anchor="middle" class="postmark-city">PORTLAND</text>
+        <text x="18" y="20" text-anchor="middle" class="postmark-state">OR</text>
+        <text x="18" y="30" text-anchor="middle" class="postmark-date">{{postmark}}</text>
+      </svg>
+    </div>
+
+    <!-- Hand-addressed recipient -->
+    <address class="mail-address mail-address--to mail-address--handwritten">
+      <span class="handwritten address-name">{{recipient.name}}</span>
+      <span class="handwritten address-street">{{recipient.address}}</span>
+      <span class="handwritten address-cityline">{{recipient.city}}, {{recipient.state}} {{recipient.zip}}</span>
+    </address>
+
+    <!-- POSTNET barcode -->
+    <div class="barcode" data-zip="{{recipient.zip}}" aria-label="Delivery barcode for {{recipient.zip}}"></div>
+
+  </div><!-- /envelope-front -->
+
+</div><!-- /envelope -->

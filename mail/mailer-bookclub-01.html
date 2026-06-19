@@ -1,0 +1,50 @@
+<!-- MAILER | id:mailer-bookclub-01 | sender:null | z:6 | speed:0.23 -->
+<div class="mailer-bookclub" style="border:2px solid {{config.mailerBookclub.accentColor}};">
+
+  <div class="mailer-bookclub__header" style="background:{{config.mailerBookclub.accentColor}};">
+    <div class="mailer-bookclub__club-name">
+      {{config.mailerBookclub.clubName}}
+    </div>
+    <div class="mailer-bookclub__tagline">
+      {{config.mailerBookclub.clubTagline}}
+    </div>
+  </div>
+
+  <div class="mailer-bookclub__offer">
+    <div class="mailer-bookclub__headline">
+      {{config.mailerBookclub.headline}}
+    </div>
+    <div class="mailer-bookclub__qty" style="color:{{config.mailerBookclub.accentColor}};">
+      {{config.mailerBookclub.offerQuantity}} <span class="mailer-bookclub__qty-for">for</span> {{config.mailerBookclub.offerPrice}}
+    </div>
+    <div class="mailer-bookclub__detail">{{config.mailerBookclub.offerDetail}}</div>
+  </div>
+
+  <div class="mailer-bookclub__body">
+    {{config.mailerBookclub.body}}
+  </div>
+
+  <!-- Selection titles -->
+  <div class="mailer-bookclub__selections">
+    <div class="mailer-bookclub__sel-label">
+      {{config.mailerBookclub.selectionLabel}}
+    </div>
+    <div class="mailer-bookclub__sel-list">
+      {{config.mailerBookclub.title1}}<br>
+      {{config.mailerBookclub.title2}}<br>
+      {{config.mailerBookclub.title3}}
+    </div>
+  </div>
+
+  <!-- Recipient window -->
+  <div class="envelope-window envelope-window--flow">
+    <div class="mail-address mail-address--window">
+      <span class="address-name">{{recipient.name}}</span><br>
+      <span class="address-street">{{recipient.address}}</span><br>
+      <span class="address-cityline">{{recipient.city}}, {{recipient.state}} {{recipient.zip}}</span>
+    </div>
+  </div>
+
+  <div class="barcode barcode--flow" data-zip="{{recipient.zip}}"></div>
+
+</div>

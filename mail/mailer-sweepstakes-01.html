@@ -1,0 +1,48 @@
+<!-- MAILER | id:mailer-sweepstakes-01 | sender:null | z:7 | speed:0.21 -->
+<div class="mailer-sweepstakes" style="border:2px solid {{config.mailerSweepstakes.borderColor}};">
+
+  <!-- Urgent top bar -->
+  <div class="mailer-sweepstakes__urgent">
+    <span class="mailer-sweepstakes__urgent-label">{{config.mailerSweepstakes.urgencyLabel}}</span>
+    <span class="mailer-sweepstakes__urgent-dated">DATED MATERIAL</span>
+  </div>
+
+  <!-- Hero copy -->
+  <div class="mailer-sweepstakes__hero" style="border-bottom-color:{{config.mailerSweepstakes.borderColor}};">
+    <div class="mailer-sweepstakes__co-name" style="color:{{config.mailerSweepstakes.borderColor}};">
+      {{config.mailerSweepstakes.companyName}}
+    </div>
+    <div class="mailer-sweepstakes__headline">
+      {{config.mailerSweepstakes.headline}}
+    </div>
+    <div class="mailer-sweepstakes__prize">
+      {{config.mailerSweepstakes.prizeAmount}}
+    </div>
+    <div class="mailer-sweepstakes__fine">
+      {{config.mailerSweepstakes.finePrint}}
+    </div>
+  </div>
+
+  <!-- Body copy -->
+  <div class="mailer-sweepstakes__body">
+    {{config.mailerSweepstakes.body}}
+  </div>
+
+  <!-- Fake scratch-off zone -->
+  <div class="mailer-sweepstakes__scratch">
+    <span class="mailer-sweepstakes__scratch-label">{{config.mailerSweepstakes.scratchLabel}}</span>
+    {{config.mailerSweepstakes.confirmNumber}}
+  </div>
+
+  <!-- Recipient window -->
+  <div class="envelope-window envelope-window--flow">
+    <div class="mail-address mail-address--window">
+      <span class="address-name">{{recipient.name}}</span><br>
+      <span class="address-street">{{recipient.address}}</span><br>
+      <span class="address-cityline">{{recipient.city}}, {{recipient.state}} {{recipient.zip}}</span>
+    </div>
+  </div>
+
+  <div class="barcode barcode--flow" data-zip="{{recipient.zip}}"></div>
+
+</div>

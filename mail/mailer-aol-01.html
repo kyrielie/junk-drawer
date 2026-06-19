@@ -1,0 +1,75 @@
+<!-- CD-SLEEVE | id:mailer-aol-01 | sender:aol | z:3 | speed:0.10 -->
+  <div class="cd-sleeve" aria-label="AOL 100 Hours Free CD-ROM mailer, July 1997">
+
+    <!-- FRONT FACE — cobalt + yellow, bold 90s promo typography -->
+    <div class="cd-sleeve__front">
+
+      <!-- Corporate color band top -->
+      <div class="cd-sleeve__band">
+        <span class="cd-sleeve__brand">America Online</span>
+      </div>
+
+      <!-- Big promo hook -->
+      <div class="cd-sleeve__headline-block">
+        <div class="cd-sleeve__free-hours">100<span class="cd-sleeve__free-unit">HOURS</span></div>
+        <div class="cd-sleeve__free-label">FREE!</div>
+        <div class="cd-sleeve__sub">Try the Internet — Risk Free</div>
+      </div>
+
+      <!-- Feature list -->
+      <div class="cd-sleeve__features">
+        <div class="cd-sleeve__feature">✦ E-Mail anyone, anywhere</div>
+        <div class="cd-sleeve__feature">✦ Browse the World Wide Web</div>
+        <div class="cd-sleeve__feature">✦ Chat rooms &amp; message boards</div>
+        <div class="cd-sleeve__feature">✦ News, weather &amp; sports scores</div>
+      </div>
+
+      <!-- CD graphic placeholder -->
+      <div class="cd-sleeve__disc-graphic" aria-hidden="true">
+        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="30" cy="30" r="28" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+          <circle cx="30" cy="30" r="20" fill="rgba(255,255,255,0.12)"/>
+          <circle cx="30" cy="30" r="12" fill="rgba(255,255,255,0.08)"/>
+          <circle cx="30" cy="30" r="4"  fill="rgba(255,255,255,0.4)"/>
+          <!-- Spectrum lines suggesting iridescence -->
+          <line x1="30" y1="2"  x2="30" y2="58" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+          <line x1="2"  y1="30" x2="58" y2="30" stroke="rgba(255,255,255,0.06)" stroke-width="0.5"/>
+        </svg>
+      </div>
+
+      <!-- Bottom: permit + address printed on same face -->
+      <div class="cd-sleeve__mailing-strip">
+        <div class="permit-block permit-block--inline" aria-label="Bulk Rate US Postage Paid">
+          <span class="permit-block__line">BULK RATE</span>
+          <span class="permit-block__line">US POSTAGE</span>
+          <span class="permit-block__line">PAID</span>
+          <span class="permit-block__line permit-block__permit">DULLES VA</span>
+          <span class="permit-block__line permit-block__permit">PERMIT NO. 5539</span>
+        </div>
+
+        <div class="mail-address mail-address--typed cd-sleeve__address">
+          <span class="mail-address__name">{{recipient.name}}</span>
+          <span class="mail-address__line">{{recipient.address}}</span>
+          <span class="mail-address__line">{{recipient.city}}, {{recipient.state}}  {{recipient.zip}}</span>
+        </div>
+
+        <div class="barcode" data-zip="{{recipient.zip}}" aria-hidden="true"></div>
+      </div>
+
+    </div>
+
+    <!-- BACK FACE — perforated zip-strip at top, security pattern -->
+    <div class="cd-sleeve__back">
+      <div class="cd-sleeve__perf-strip" aria-label="Tear here to open">
+        <div class="cd-sleeve__perf-label">TEAR HERE ▼</div>
+        <div class="cd-sleeve__perf-line"></div>
+      </div>
+      <div class="cd-sleeve__security-field" aria-hidden="true"></div>
+      <div class="cd-sleeve__back-copy">
+        <p>Version 3.0 for Windows 95 &amp; Windows 3.1</p>
+        <p>System requirements: 486 or faster PC, 8MB RAM, 14.4 modem or faster, Windows 3.1 or higher. CD-ROM drive required for this version. Floppy disk version available upon request. Offer valid for new members only. After free trial period, standard monthly fee applies. See enclosed terms for details.</p>
+        <p>© 1997 America Online, Inc. All rights reserved. AOL and the Running Man logo are registered trademarks of America Online, Inc.</p>
+      </div>
+    </div>
+
+  </div>

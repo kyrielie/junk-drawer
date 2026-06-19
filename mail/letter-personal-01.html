@@ -1,0 +1,22 @@
+<!-- LETTER | id:letter-personal-01 | sender:senders[4] | z:11 | speed:0.18 -->
+  <div class="letter-section letter-section--tall">
+    <div class="letter__line-offset--tall"></div>
+    <div class="letter__date">{{config.letterPersonal.date}}</div>
+    <div class="letter__salutation-bold">{{config.letterPersonal.salutation}}</div>
+    <p class="letter__handwritten">{{config.letterPersonal.paragraph1}}</p>
+    <p class="letter__handwritten">{{config.letterPersonal.paragraph2}}</p>
+  </div>
+
+  <div class="letter__rule--light" aria-hidden="true"></div>
+
+  <div class="letter-section letter-section--mid-tall">
+    <p class="letter__handwritten">{{config.letterPersonal.paragraph3}}</p>
+    <p class="letter__handwritten">{{config.letterPersonal.paragraph4}}</p>
+  </div>
+
+  <div class="letter__rule--light" aria-hidden="true"></div>
+
+  <div class="letter-section--close">
+    <span class="letter-closing">{{config.letterPersonal.closing}}</span>
+    <span class="letter-signature">{{senders[4].name}}</span>
+  </div>

@@ -1,0 +1,26 @@
+<!-- OBJECT | id:obj-postmark-deco | sender:null | z:8 | speed:0.10 -->
+<div class="obj-postmark-deco">
+  <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"
+       aria-hidden="true">
+    <circle cx="60" cy="60" r="56" fill="none" stroke="{{config.objects.postmarkDecoColor}}" stroke-width="3"/>
+    <circle cx="60" cy="60" r="48" fill="none" stroke="{{config.objects.postmarkDecoColor}}" stroke-width="1.2"/>
+    <path d="M80,44 Q92,50 104,44 Q110,48 116,44" fill="none" stroke="{{config.objects.postmarkDecoColor}}" stroke-width="2.5"/>
+    <path d="M80,52 Q92,58 104,52 Q110,56 116,52" fill="none" stroke="{{config.objects.postmarkDecoColor}}" stroke-width="2.5"/>
+    <path d="M80,60 Q92,66 104,60 Q110,64 116,60" fill="none" stroke="{{config.objects.postmarkDecoColor}}" stroke-width="2.5"/>
+    <path d="M80,68 Q92,74 104,68 Q110,72 116,68" fill="none" stroke="{{config.objects.postmarkDecoColor}}" stroke-width="2.5"/>
+    <path d="M80,76 Q92,82 104,76 Q110,80 116,76" fill="none" stroke="{{config.objects.postmarkDecoColor}}" stroke-width="2.5"/>
+    <text font-family="var(--font-logo)" font-size="9" font-weight="700"
+          fill="{{config.objects.postmarkDecoColor}}" letter-spacing="2">
+      <textPath href="#topArc" startOffset="50%" text-anchor="middle">{{config.objects.postmarkDecoCity}}</textPath>
+    </text>
+    <text font-family="var(--font-logo)" font-size="8"
+          fill="{{config.objects.postmarkDecoColor}}" letter-spacing="2">
+      <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">{{config.objects.postmarkDecoState}}</textPath>
+    </text>
+    <path id="topArc"    d="M 16,60 A 44,44 0 0,1 104,60" fill="none"/>
+    <path id="bottomArc" d="M 18,68 A 44,44 0 0,0 102,68" fill="none"/>
+    <text x="60" y="64" text-anchor="middle" font-family="var(--font-body)"
+          font-size="10" font-weight="700"
+          fill="{{config.objects.postmarkDecoColor}}">{{config.objects.postmarkDecoDate}}</text>
+  </svg>
+</div>

@@ -1,0 +1,6103 @@
+/*
+ * css/main.css
+ * Postcard — all shared styles.
+ *
+ * TABLE OF CONTENTS
+ *   1.  Custom Properties (palette, type, shadow, spacing)
+ *   2.  Reset & Base
+ *   3.  Site Nav
+ *   4.  Canvas (desk surface)
+ *   5.  Mail Piece (base wrapper)
+ *   6.  Image Frame & Missing Fallback
+ *   7.  Tape
+ *   8.  Stamps
+ *   9.  Postmarks
+ *  10.  Postcard
+ *  11.  Envelope
+ *  12.  Letter
+ *  13.  Appointment Card
+ *  14.  Rubber Stamps
+ *  15.  Barcodes
+ *  16.  Address blocks
+ *  17.  Letter Overlay (modal)
+ *  18.  Utility classes
+ *  19.  Reduced-motion overrides
+ *  20.  Print styles
+ */
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   1. CUSTOM PROPERTIES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Palette ──────────────────────────────────────────────────────────── */
+  --color-paper-white:         #FAFAF5;
+  --color-aged-paper:          #F2ECD8;
+  --color-manila:              #D4B896;
+  --color-ink-black:           #1A1A1A;
+  --color-stamp-red:           #C0392B;
+  --color-stamp-blue:          #2471A3;
+  --color-usps-blue:           #004B87;
+  --color-cancellation-purple: #6C3483;
+
+  /* ── Desk surface ─────────────────────────────────────────────────────── */
+  --color-desk:                #C8B99A;
+  --color-desk-dark:           #A8956A;
+
+  /* ── Canvas stripes ───────────────────────────────────────────────────── */
+  --stripe-a:                  #F5F0E8;
+  --stripe-b:                  #FAFAF5;
+
+  /* ── Typography ───────────────────────────────────────────────────────── */
+  --font-body:        'Courier Prime', 'Courier New', monospace;
+  --font-handwritten: 'Caveat', cursive;
+  --font-logo:        'Special Elite', serif;
+  --font-print:       'IM Fell English', 'Georgia', serif;
+
+  /* ── Shadows — warm brown, never black ───────────────────────────────── */
+  --shadow-paper:
+    3px 5px 8px  rgba(80, 55, 30, 0.35),
+    1px 2px 3px  rgba(80, 55, 30, 0.20),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.40);
+
+  --shadow-paper-hover:
+    5px 8px 16px rgba(80, 55, 30, 0.45),
+    2px 3px 6px  rgba(80, 55, 30, 0.25),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.50);
+
+  --shadow-overlay:
+    0 12px 48px rgba(40, 25, 10, 0.55),
+    0  4px 16px rgba(40, 25, 10, 0.30);
+
+  --shadow-stamp:
+    1px 2px 3px rgba(80, 55, 30, 0.30);
+
+  /* ── Transitions ──────────────────────────────────────────────────────── */
+  --transition-lift:    box-shadow 0.18s ease;
+  --transition-flap:    transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-peek:    transform 0.55s cubic-bezier(0.34, 1.06, 0.64, 1);
+  --transition-overlay: opacity 0.22s ease, visibility 0s linear 0s;
+
+  /* ── Spacing ──────────────────────────────────────────────────────────── */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  40px;
+
+  /* ── Canvas ───────────────────────────────────────────────────────────── */
+  --canvas-min-height: 560px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   2. RESET & BASE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-desk);
+  font-family: var(--font-body);
+  color: var(--color-ink-black);
+  overflow-x: hidden;
+
+  /* Woodgrain: two offset stripe sets at near-perpendicular angles */
+  background-image:
+    repeating-linear-gradient(
+      91deg,
+      transparent              0px,
+      transparent              7px,
+      rgba(100, 70, 30, 0.055) 7px,
+      rgba(100, 70, 30, 0.055) 8px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      transparent            0px,
+      transparent            22px,
+      rgba(80, 50, 20, 0.04) 22px,
+      rgba(80, 50, 20, 0.04) 23px
+    );
+}
+
+address { font-style: normal; }
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+  background: none;
+}
+
+a {
+  color: var(--color-stamp-blue);
+  text-decoration: underline;
+}
+
+
+/* 3. SITE NAV — removed */
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4. CANVAS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+#canvas {
+  position: relative;
+  width: 100%;
+  min-height: var(--canvas-min-height);
+  /* 36px each side clears the permanent drawer-wall rails (body::before/after) */
+  padding-left: 36px;
+  padding-right: 36px;
+  /* 36px bottom clears the floor bar (#drawer-floor) */
+  padding-bottom: 36px;
+  box-sizing: border-box;
+
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--stripe-a) 0px,
+    var(--stripe-a) 4px,
+    var(--stripe-b) 4px,
+    var(--stripe-b) 8px
+  );
+
+  /* Vignette: light source top-left, shadow bottom-right */
+  box-shadow:
+    inset  80px  80px 160px rgba(255, 245, 220, 0.18),
+    inset -80px -80px 160px rgba(60,  35,  10, 0.14);
+}
+
+ /* ── Dragging state — main canvas & drawer pile ── */
+#canvas .mail-piece.is-dragging,
+#drawer-pile .mail-piece.is-dragging {
+  opacity: 0.92;
+  box-shadow: var(--shadow-paper-hover);
+  cursor: grabbing;
+  z-index: 9000 !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   5. MAIL PIECE — base wrapper
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mail-piece {
+  position: absolute;
+  box-shadow: var(--shadow-paper);
+  will-change: transform;
+  cursor: default;
+  transition: var(--transition-lift);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   6. IMAGE FRAME & MISSING FALLBACK
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.img-frame {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--color-manila);
+}
+
+.img-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.img-frame--postcard {
+  width: 100%;
+  height: 100%;
+}
+
+/* onerror on the <img> adds .img-missing to the parent .img-frame */
+.img-frame.img-missing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-manila);
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255,255,255,0.12) 0px,  rgba(255,255,255,0.12) 2px,
+    transparent            2px,  transparent            10px
+  );
+}
+
+.img-frame.img-missing::after {
+  content: '[ photo ]';
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: rgba(80, 55, 30, 0.5);
+  text-transform: lowercase;
+}
+
+.img-frame.img-missing img { display: none; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   7. TAPE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.tape {
+  position: absolute;
+  width: 52px;
+  height: 18px;
+  background-color: rgba(240, 220, 140, 0.52);
+  border-top:    1px solid rgba(200, 180, 80, 0.30);
+  border-bottom: 1px solid rgba(200, 180, 80, 0.30);
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent               0px,
+    transparent               3px,
+    rgba(200, 170, 60, 0.10) 3px,
+    rgba(200, 170, 60, 0.10) 4px
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+
+.tape--postcard { width: 44px; height: 14px; }
+.tape--long     { width: 80px; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   8. STAMPS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.stamp {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  width: 52px;
+  height: 62px;
+  box-shadow: var(--shadow-stamp);
+  z-index: 3;
+  transform: rotate(1.5deg);  /* never perfectly level */
+  pointer-events: none;
+}
+
+/* Envelope stamps clear the flap area */
+.stamp--envelope { top: var(--space-lg); }
+
+.stamp-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.stamp-perf {
+  fill: var(--color-paper-white);
+  stroke: none;
+  filter: drop-shadow(0px 1px 1px rgba(80, 55, 30, 0.25));
+}
+
+.stamp-denom {
+  font-family: var(--font-body);
+  font-size: 7px;
+  font-weight: 700;
+  fill: var(--color-ink-black);
+  letter-spacing: 0.04em;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   9. POSTMARKS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.postmark {
+  position: absolute;
+  top: var(--space-sm);
+  right: 50px;
+  width: 80px;
+  height: 36px;
+  pointer-events: none;
+  opacity: 0.82;
+  z-index: 4;
+  transform: rotate(-2deg);
+}
+
+.postmark--envelope {
+  top: 28px;
+  right: 58px;
+}
+
+.postmark svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.postmark-city,
+.postmark-state,
+.postmark-date {
+  font-family: var(--font-body);
+  font-size: 6px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  fill: currentColor;
+}
+
+.postmark--purple { color: var(--color-cancellation-purple); }
+.postmark--red    { color: var(--color-stamp-red); }
+.postmark--blue   { color: var(--color-stamp-blue); }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   10. POSTCARD
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.postcard {
+  position: relative;
+  width: 384px;
+  height: 256px;
+  background-color: var(--color-paper-white);
+  border-radius: 2px;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.postcard-front,
+.postcard-back {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.postcard-front          { background-color: var(--color-ink-black); }
+.postcard-front--warm    { background-color: var(--color-aged-paper); }
+
+.postcard-front-label {
+  position: absolute;
+  bottom: var(--space-xs);
+  left: var(--space-sm);
+  z-index: 2;
+}
+
+.postcard-front-city {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(0,0,0,0.35);
+  padding: 1px 5px;
+  border-radius: 1px;
+}
+
+.postcard-caption-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.5);
+  padding: var(--space-xs) var(--space-sm);
+  z-index: 2;
+}
+
+.postcard-caption-text {
+  font-family: var(--font-logo);
+  font-size: 0.75rem;
+  letter-spacing: 0.10em;
+  color: var(--color-paper-white);
+}
+
+.postcard-back {
+  transform: rotateY(180deg);
+  background-color: var(--color-paper-white);
+  display: flex;
+  padding: var(--space-sm);
+}
+
+.postcard-divider {
+  position: absolute;
+  top: var(--space-sm);
+  bottom: var(--space-sm);
+  left: 50%;
+  width: 1px;
+  background: rgba(80, 55, 30, 0.20);
+}
+
+.postcard-message {
+  flex: 1;
+  padding-right: var(--space-md);
+  overflow: hidden;
+}
+
+.postcard-address-col {
+  position: relative;
+  width: 48%;
+  padding-left: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--space-xs);
+}
+
+.postcard.is-flipped .postcard-front { transform: rotateY(180deg); }
+.postcard.is-flipped .postcard-back  { transform: rotateY(0deg); }
+
+.handwritten--margin-note {
+  position: absolute;
+  bottom: 6px;
+  left: -2px;
+  font-size: 0.62rem;
+  transform: rotate(-90deg);
+  transform-origin: bottom left;
+  white-space: nowrap;
+  color: rgba(30, 20, 10, 0.7);
+  max-width: 180px;
+  overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   11. ENVELOPE (SEQUENTIAL ANIMATION & FULL FLIP)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.envelope {
+  position: relative;
+  width: 420px;
+  height: 182px;
+  border-radius: 2px;
+  overflow: visible;          
+  perspective: 1200px;        
+  transform-style: preserve-3d;
+}
+
+.envelope--manila   { }
+.envelope--personal { width: 380px; height: 170px; }
+
+
+/* ── Back plate — Base layer (0px) ──────────────────────────────────────── */
+.envelope-back {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transform: translateZ(0px); 
+  transform-style: preserve-3d;
+  background-color: var(--color-aged-paper);
+  background-image:
+    linear-gradient(135deg, rgba(80,55,30,0.08) 0%, transparent 50%),
+    linear-gradient(225deg, rgba(80,55,30,0.08) 0%, transparent 50%);
+}
+
+.envelope--manila   .envelope-back { background-color: #C4A882; }
+.envelope--personal .envelope-back { background-color: #DDD5BB; }
+
+.envelope--creased .envelope-back::after {
+  content: '';
+  position: absolute;
+  top: 42%;
+  left: 6px;
+  right: 6px;
+  height: 1px;
+  background: rgba(80, 55, 30, 0.14);
+  pointer-events: none;
+}
+
+
+/* ── Letter peek — Inside Pocket (1px) ───────────────────────────────────── */
+.letter-peek {
+  position: absolute;
+  bottom: 6px;
+  left: 14px;
+  right: 14px;
+  height: calc(100% - 12px);
+  transform: translateZ(1px) translateY(0);
+  
+  /* SEQUENTIAL ANIMATION FIX (CLOSE): 
+     When closing, the letter should slide back down IMMEDIATELY, 
+     allowing the flap to close over it afterward. No delay here. */
+  transition: var(--transition-peek);
+  
+  cursor: default;
+  overflow: hidden;
+  pointer-events: none;
+  background-color: var(--color-paper-white);
+  border-radius: 1px;
+  box-shadow:
+    0 -1px 4px rgba(80, 55, 30, 0.14),
+    inset 0 0 0 1px rgba(255,255,255,0.45);
+}
+
+.letter-peek--folded {
+  border-top: 1px solid rgba(80, 55, 30, 0.13);
+}
+
+/* SEQUENTIAL ANIMATION FIX (OPEN):
+   When the envelope opens, we force the letter to wait 0.45 seconds. 
+   This matches the precise length of the flap rotation animation, 
+   ensuring the flap is entirely out of the way before the letter rises. */
+.envelope.is-open .letter-peek {
+  transform: translateZ(1.5px) translateY(-88px);
+  pointer-events: auto;
+  cursor: pointer;
+  transition-delay: 0.45s; 
+}
+
+/* Maintain hover state depth responsiveness without animation delays */
+.envelope.is-open .letter-peek:hover {
+  transform: translateZ(1.8px) translateY(-96px);
+  transition-delay: 0s;
+  box-shadow:
+    0 -4px 12px rgba(80, 55, 30, 0.26),
+    inset 0 0 0 1px rgba(255,255,255,0.55);
+}
+
+.letter-content { display: none; }
+
+
+/* ── Flap — Pivoting Cover Layer (2px) ──────────────────────────────────── */
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 75px;
+  transform-origin: top center;
+  transform: translateZ(2px) rotateX(0deg);
+  
+  /* SEQUENTIAL ANIMATION FIX (CLOSE):
+     When closing the envelope, the flap must wait 0.55 seconds for the letter 
+     to fully descend back into its pocket before it snaps down over it. */
+  transition: var(--transition-flap);
+  transition-delay: 0.55s; 
+  
+  pointer-events: none;
+  clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+  background-color: var(--color-aged-paper);
+  box-shadow: 0 3px 6px rgba(80, 55, 30, 0.20);
+  
+  /* Enforced as requested: visible backface */
+  backface-visibility: visible; 
+}
+
+.envelope--manila   .envelope-flap { background-color: #C4A882; }
+.envelope--personal .envelope-flap { background-color: #DDD5BB; }
+
+.envelope-flap--torn {
+  clip-path: polygon(
+    0%   0%, 100%  0%,
+    100% 8%,  90%  4%,  80%  9%,  68%  3%,  55%  8%,
+    50% 100%,
+    44%  8%,  32%  3%,  20%  9%,  10%  4%,   0%  8%
+  );
+}
+
+.envelope-flap-inner {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(155deg, rgba(255,255,255,0.16) 0%, transparent 55%);
+}
+
+/* OPEN FIX FOR -180 DEGREE FLIP:
+   Because the flap is perfectly flipped 180 degrees, its backface is exposed.
+   A negative translateZ pushes it forward. We use translateZ(-2.5px) so that 
+   when it lies flat against the back plate, it sits safely in front of it 
+   and out of the way of the letter emerging at translateZ(1.5px).
+   
+   We clear the transition-delay here so it begins opening IMMEDIATELY. */
+.envelope.is-open .envelope-flap {
+  transform: rotateX(-180deg) translateZ(-2.5px);
+  transition-delay: 0s;
+}
+
+
+/* ── Front face — Top-most Printed Content (3px) ────────────────────────── */
+.envelope-front {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transform: translateZ(3px);
+  background-color: var(--color-paper-white);
+  border-top: 1px solid rgba(80, 55, 30, 0.10);
+}
+
+.envelope--manila   .envelope-front { background-color: var(--color-manila); }
+.envelope--personal .envelope-front { background-color: var(--color-aged-paper); }
+
+.envelope-return-address {
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  max-width: 38%;
+}
+
+.envelope-return-address--handwritten .address-name,
+.envelope-return-address--handwritten .address-street,
+.envelope-return-address--handwritten .address-cityline {
+  font-family: var(--font-handwritten);
+  font-size: 0.75rem;
+}
+
+.envelope-window {
+  position: absolute;
+  bottom: 28px;
+  left: 64px;
+  width: 180px;
+  height: 52px;
+  background: rgba(200, 220, 240, 0.18);
+  border: 1px solid rgba(80, 55, 30, 0.22);
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+}
+
+.mail-address--window .address-name,
+.mail-address--window .address-street,
+.mail-address--window .address-cityline {
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   12. LETTER (inside envelope — rendered only in overlay)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.letter {
+  background-color: var(--color-paper-white);
+  padding: var(--space-xl) var(--space-xl) var(--space-lg);
+  max-width: 560px;
+  margin: 0 auto;
+  position: relative;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent         0px,
+    transparent         27px,
+    rgba(80,55,30,0.08) 27px,
+    rgba(80,55,30,0.08) 28px
+  );
+  background-position: 0 36px;
+}
+
+.letter--official { background-image: none; }
+
+.letter-page { position: relative; }
+
+.letter-page + .letter-page {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-xl);
+  border-top: 1px solid rgba(80, 55, 30, 0.10);
+}
+
+.fold-mark {
+  position: absolute;
+  left: -40px;
+  right: -40px;
+  top: 33%;
+  height: 1px;
+  background: rgba(80, 55, 30, 0.12);
+  pointer-events: none;
+}
+
+.fold-mark--lower { top: 66%; }
+
+.letter-header-block { margin-bottom: var(--space-md); }
+
+.letter-date {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: var(--space-xs);
+  opacity: 0.8;
+}
+
+.letter-salutation {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.letter-body p {
+  margin-bottom: var(--space-md);
+  line-height: 1.75;
+}
+
+.letter-body--typed p {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  line-height: 1.8;
+  color: var(--color-ink-black);
+}
+
+.letter-header-block--typed { margin-bottom: var(--space-lg); }
+
+.letter-meta-row {
+  display: flex;
+  gap: var(--space-md);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  line-height: 1.7;
+}
+
+.letter-meta-key {
+  min-width: 60px;
+  font-weight: 700;
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.letter-sign-off { margin-top: var(--space-lg); }
+
+.letter-sign-off--typed {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.letter-closing {
+  display: block;
+  font-size: 1rem;
+}
+
+.letter-signature {
+  display: block;
+  font-family: var(--font-handwritten);
+  font-size: 1.5rem;
+  line-height: 1;
+  transform: rotate(-3deg);
+  transform-origin: left center;
+  margin-bottom: -6px;
+  position: relative;
+  z-index: 1;
+}
+
+.letter-typed-name {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+}
+
+.letter-typed-title {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  opacity: 0.6;
+}
+
+.letterhead {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--space-sm);
+  gap: 2px;
+}
+
+.letterhead-name {
+  font-family: var(--font-print);
+  font-size: 1.1rem;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+}
+
+.letterhead-address,
+.letterhead-phone {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  opacity: 0.65;
+}
+
+.letterhead-rule {
+  border: none;
+  border-top: 2px solid rgba(80, 55, 30, 0.25);
+  margin-bottom: var(--space-lg);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   13. APPOINTMENT CARD
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.appointment-card {
+  background-color: var(--color-paper-white);
+  border: 1px solid rgba(80, 55, 30, 0.20);
+  border-radius: 3px;
+  padding: var(--space-lg) var(--space-xl);
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.appointment-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 2px solid var(--color-usps-blue);
+}
+
+.appointment-practice-name {
+  font-family: var(--font-print);
+  font-size: 1.05rem;
+  color: var(--color-usps-blue);
+  letter-spacing: 0.02em;
+}
+
+.appointment-tagline {
+  font-family: var(--font-print);
+  font-style: italic;
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+.appointment-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.appointment-label {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.55;
+  margin-bottom: var(--space-xs);
+}
+
+.appointment-detail-row {
+  display: flex;
+  gap: var(--space-md);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.appointment-detail-key {
+  min-width: 72px;
+  font-weight: 700;
+  opacity: 0.55;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  padding-top: 1px;
+}
+
+.appointment-note {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  line-height: 1.6;
+  margin-top: var(--space-sm);
+  opacity: 0.75;
+}
+
+.appointment-address-line {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  opacity: 0.5;
+  letter-spacing: 0.04em;
+}
+
+.appointment-card-footer {
+  margin-top: var(--space-md);
+  padding-top: var(--space-sm);
+  border-top: 1px solid rgba(80, 55, 30, 0.12);
+}
+
+.appointment-card-footer .handwritten {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(30, 60, 120, 0.85);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   14. RUBBER STAMPS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.rubber-stamp {
+  position: absolute;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0.78;
+}
+
+.rubber-stamp--important {
+  top: 52px;
+  left: var(--space-md);
+  transform: rotate(-4deg);
+}
+
+.rubber-stamp svg { display: block; }
+
+.rubber-stamp-text {
+  font-family: var(--font-body);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  fill: var(--color-stamp-red);
+  text-transform: uppercase;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   15. BARCODES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.barcode {
+  position: absolute;
+  bottom: 6px;
+  left: var(--space-md);
+  right: var(--space-md);
+  height: 14px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.barcode-svg { display: block; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   16. ADDRESS BLOCKS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mail-address {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-family: var(--font-body);
+  line-height: 1.55;
+}
+
+.mail-address--handwritten .address-name,
+.mail-address--handwritten .address-street,
+.mail-address--handwritten .address-cityline {
+  font-family: var(--font-handwritten);
+}
+
+.mail-address--typed .address-name,
+.mail-address--typed .address-street,
+.mail-address--typed .address-cityline {
+  font-family: var(--font-body);
+}
+
+.mail-address--from { font-size: 0.62rem; opacity: 0.75; }
+.mail-address--to   { font-size: 0.72rem; }
+
+/* Recipient address on envelopes — absolutely positioned on the front face */
+.mail-address--to:not(.mail-address--window) {
+  position: absolute;
+  bottom: var(--space-xl);
+  left: 50%;
+  transform: translateX(-8px);
+}
+
+.address-name { font-weight: 700; }
+
+/* On postcards the address is in-flow, not absolute */
+.postcard-address-col .mail-address--to {
+  position: static;
+  transform: none;
+  font-size: 0.68rem;
+}
+
+.handwritten           { font-family: var(--font-handwritten); line-height: 1.55; }
+.handwritten--small    { font-size: 0.82rem; }
+.handwritten--letter   { font-size: 0.92rem; line-height: 1.75; }
+.handwritten--blue     { color: rgba(30, 60, 120, 0.85); }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   17. LETTER OVERLAY (modal — Option B)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+#letter-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+  background: rgba(60, 38, 18, 0.72);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition-overlay);
+}
+
+#letter-overlay.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.overlay-body {
+  position: relative;
+  background-color: var(--color-paper-white);
+  border-radius: 2px;
+  max-width: 620px;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-overlay);
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent         0px,
+    transparent         27px,
+    rgba(80,55,30,0.07) 27px,
+    rgba(80,55,30,0.07) 28px
+  );
+  background-position: 0 20px;
+}
+
+.overlay-close {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(80, 55, 30, 0.10);
+  color: var(--color-ink-black);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+  z-index: 2;
+}
+
+.overlay-close:hover { background: rgba(80, 55, 30, 0.22); }
+
+.overlay-body .letter--official { padding: var(--space-xl); }
+
+/* ── OVERLAY: REVEAL HIDDEN CONTENT ─────────────────────────────────────────
+   Mail piece elements that are hidden on the desk (display:none) should be
+   visible when promoted into the overlay. Two mechanisms:
+
+   1. Explicit data-attribute — preferred for new pieces. Add
+      data-overlay-show to any element that should reveal itself in overlay.
+   2. Known class list — covers existing pieces without needing HTML edits.    */
+
+.overlay-body [data-overlay-show]            { display: block; }
+
+/* display:block is correct for these — none of them are flex containers
+   in their normal (non-overlay) context. */
+.overlay-body[data-overlay-type="piece"] .letter-content,
+.overlay-body[data-overlay-type="piece"] .summons__interior   { display: block; }
+
+/* These ARE flex containers (flex-direction:column, or children relying on
+   flex:1) in their normal context — display:block would silently drop that
+   layout once revealed, so they need their real display value restored.
+   .postcard-back is intentionally NOT listed here: every .postcard is
+   bound by bindPostcard()/onPostcardClick(), which always opens the
+   dedicated [data-overlay-type="postcard"] overlay (handled separately
+   below) and only ever copies .postcard-back's *innerHTML* into it — the
+   .postcard-back element itself never reaches a [data-overlay-type="piece"]
+   overlay, so a rule for it here would be unreachable dead code. */
+.overlay-body[data-overlay-type="piece"] .ad-postcard__back,
+.overlay-body[data-overlay-type="piece"] .cd-sleeve__back,
+.overlay-body[data-overlay-type="piece"] .kraft-mailer__interior { display: flex; }
+
+/* ── POSTCARD OVERLAY ────────────────────────────────────────────────────────
+   Postcard back shown in overlay — readable size, no ruled lines            */
+
+.overlay-body[data-overlay-type="postcard"] {
+  max-width: 680px;
+  background-color: var(--color-paper-white);
+  /* Postcards are not ruled paper */
+  background-image: none;
+}
+
+/* Re-use .postcard-back layout but remove the desk-side rotateY */
+.overlay-body[data-overlay-type="postcard"] .postcard-back {
+  transform: none;
+  display: flex;
+  min-height: 340px;
+  padding: var(--space-xl);
+  gap: 0;
+  position: relative;
+}
+
+/* Scale handwriting up to a comfortable reading size */
+.overlay-body[data-overlay-type="postcard"] .handwritten {
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+/* Address column: override any absolute positioning from the desk layout */
+.overlay-body[data-overlay-type="postcard"] .postcard-address-col {
+  position: relative;
+}
+
+/* Margin note: un-rotate so it reads horizontally in the overlay */
+.overlay-body[data-overlay-type="postcard"] .handwritten--margin-note {
+  position: static;
+  transform: none;
+  writing-mode: horizontal-tb;
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-top: var(--space-sm);
+  white-space: normal;
+  max-width: none;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   18. UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(80, 55, 30, 0.7);
+  outline-offset: 3px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   19. REDUCED-MOTION OVERRIDES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .envelope-flap  { transition: none; }
+  .letter-peek    { transition: none; }
+  .mail-piece     { transition: none; }
+  #letter-overlay { transition: none; }
+
+  .envelope.is-open .envelope-flap { transform: rotateX(-90deg); }
+  .envelope.is-open .letter-peek   { transform: translateY(-88px); }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   20. PRINT STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media print {
+  #letter-overlay,
+  .overlay-close  { display: none !important; }
+
+  #canvas {
+    min-height: auto;
+    background: white;
+    box-shadow: none;
+  }
+
+  .mail-piece {
+    box-shadow: 0 0 0 1px #ccc;
+    break-inside: avoid;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   21. PULL TAB (lynnandtonic-inspired interactive reveal strip)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.pull-tab {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: var(--space-xs);
+  position: relative;
+  z-index: 5;
+  transition: transform 0.18s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pull-tab:hover { transform: translateY(-2px); }
+.pull-tab--open { transform: translateY(2px); }
+.pull-tab--open:hover { transform: translateY(0px); }
+
+.pull-tab-svg {
+  width: 80px;
+  height: 22px;
+  display: block;
+  filter: drop-shadow(0 1px 2px rgba(80,55,30,0.25));
+}
+
+[data-pull-reveal] {
+  overflow: hidden;
+  /* max-height animated by JS */
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   22. MAILER (padded kraft mailer — envelope--mailer variant)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.envelope--mailer {
+  width: 520px;
+  height: 200px;
+  border-radius: 3px;
+  overflow: visible;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.envelope-back--kraft {
+  background-color: #B8966A;
+  background-image:
+    repeating-linear-gradient(
+      88deg, transparent 0px, transparent 8px,
+      rgba(100,70,30,0.06) 8px, rgba(100,70,30,0.06) 9px
+    ),
+    repeating-linear-gradient(
+      178deg, transparent 0px, transparent 5px,
+      rgba(80,50,20,0.05) 5px, rgba(80,50,20,0.05) 6px
+    );
+}
+
+.bubble-texture {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.letter-peek--mailer {
+  bottom: 4px;
+  left: 10px;
+  right: 10px;
+  height: calc(100% - 8px);
+  background-color: var(--color-paper-white);
+}
+
+/* Tear strip — fades out when .is-open */
+.envelope-flap--tear-strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 28px;
+  background-color: rgba(140,100,50,0.45);
+  border-bottom: 1px dashed rgba(80,55,30,0.4);
+  display: flex;
+  align-items: center;
+  padding-left: var(--space-md);
+  transform: translateZ(2px);
+  transition: opacity 0.3s ease;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.envelope--mailer.is-open .envelope-flap--tear-strip {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tear-strip-label {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(80,55,30,0.7);
+}
+
+.envelope--mailer.is-open .letter-peek {
+  transform: translateZ(1.5px) translateY(-60px);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.envelope-front--mailer {
+  background-color: #C8A870;
+  background-image:
+    repeating-linear-gradient(
+      90deg, transparent 0px, transparent 12px,
+      rgba(255,255,255,0.04) 12px, rgba(255,255,255,0.04) 13px
+    );
+}
+
+/* Promo sticker — absolute-positioned star burst */
+.promo-sticker {
+  position: absolute;
+  top: var(--space-sm);
+  left: var(--space-sm);
+  width: 90px;
+  height: 90px;
+  z-index: 6;
+  pointer-events: none;
+  transform: rotate(-8deg);
+}
+
+/* Shipping label block */
+.shipping-label {
+  position: absolute;
+  top: var(--space-lg);
+  left: 110px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.shipping-label-from,
+.shipping-label-to {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.shipping-label-tag {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+/* Media mail rubber stamp text color */
+.rubber-stamp-text--blue {
+  fill: var(--color-usps-blue);
+}
+
+.rubber-stamp--media-mail {
+  position: absolute;
+  bottom: var(--space-md);
+  left: 110px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   23. GREETING CARD (inside square envelope)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.envelope--square {
+  width: 280px;
+  height: 340px;
+}
+
+.envelope--square .envelope-back {
+  background-color: #E8DFCC;
+}
+
+.envelope--square .envelope-flap {
+  height: 140px;
+}
+
+/* Diamond-point flap for square envelope */
+.envelope-flap--diamond {
+  clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+}
+
+.envelope--square .envelope-front {
+  background-color: #F0EAD8;
+}
+
+.envelope--square .envelope-return-address {
+  top: var(--space-lg);
+}
+
+/* Square envelope: recipient address position override */
+.envelope--square .mail-address--to {
+  position: absolute;
+  bottom: var(--space-xl);
+  left: 50%;
+  transform: translateX(-8px);
+}
+
+/* Horoscope clipping taped to envelope */
+.horoscope-clipping {
+  position: absolute;
+  bottom: var(--space-md);
+  right: var(--space-sm);
+  width: 110px;
+  background-color: var(--color-paper-white);
+  border: 1px solid rgba(80,55,30,0.15);
+  padding: var(--space-xs) var(--space-sm);
+  transform: rotate(3.5deg);
+  font-family: var(--font-body);
+  font-size: 0.52rem;
+  line-height: 1.5;
+  color: rgba(26,26,26,0.8);
+  box-shadow: 1px 2px 4px rgba(80,55,30,0.2);
+}
+
+.horoscope-sign {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-size: 0.55rem;
+  margin-bottom: 2px;
+}
+
+.horoscope-source {
+  display: block;
+  font-size: 0.48rem;
+  opacity: 0.55;
+  margin-top: 3px;
+  font-style: italic;
+}
+
+/* Greeting card itself (inside envelope pocket) */
+.greeting-card {
+  width: 100%;
+  background-color: var(--color-paper-white);
+}
+
+.greeting-card-front {
+  background-color: #FDF0F0;
+  padding: var(--space-sm);
+  border-bottom: 1px solid rgba(80,55,30,0.10);
+}
+
+.greeting-card-art {
+  width: 100%;
+  display: block;
+}
+
+.greeting-card-preprint {
+  font-family: var(--font-print);
+  font-style: italic;
+  font-size: 0.72rem;
+  text-align: center;
+  color: rgba(155,58,82,0.85);
+  margin-top: var(--space-xs);
+  letter-spacing: 0.04em;
+}
+
+.greeting-card-inside {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-md);
+}
+
+.greeting-card-verse {
+  flex: 0 0 44%;
+  border-right: 1px solid rgba(80,55,30,0.12);
+  padding-right: var(--space-md);
+}
+
+.greeting-card-verse-text {
+  font-family: var(--font-print);
+  font-style: italic;
+  font-size: 0.72rem;
+  line-height: 1.75;
+  color: rgba(26,26,26,0.75);
+}
+
+.greeting-card-annotation {
+  font-size: 0.72rem;
+  color: rgba(30,60,120,0.8);
+  margin-top: var(--space-xs);
+  transform: rotate(-2deg);
+  display: inline-block;
+}
+
+.greeting-card-message {
+  flex: 1;
+}
+
+.greeting-card-ps {
+  font-size: 0.72rem;
+  color: rgba(30,60,120,0.8);
+  margin-top: var(--space-sm);
+  transform: rotate(-1.5deg);
+  display: inline-block;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   24. INVOICE (inside padded mailer)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.invoice {
+  background-color: var(--color-paper-white);
+  padding: var(--space-lg) var(--space-xl);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+}
+
+.invoice--suncoast { background-color: #FAFAF5; }
+
+.invoice-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-md);
+}
+
+.invoice-logo-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.invoice-logo-text {
+  font-family: var(--font-logo);
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+  color: var(--color-usps-blue);
+  line-height: 1;
+}
+
+.invoice-logo-sub {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.24em;
+  font-weight: 700;
+  color: var(--color-stamp-red);
+  text-transform: uppercase;
+  margin-top: -2px;
+}
+
+.invoice-header-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 0.65rem;
+  opacity: 0.65;
+}
+
+.invoice-tagline { font-style: italic; }
+
+.invoice-rule {
+  border: none;
+  border-top: 1.5px solid rgba(80,55,30,0.20);
+  margin: var(--space-sm) 0;
+}
+
+.invoice-rule--light {
+  border-top-width: 0.5px;
+  border-top-color: rgba(80,55,30,0.12);
+}
+
+.invoice-section { margin-bottom: var(--space-sm); }
+
+.invoice-section--totals { background-color: rgba(80,55,30,0.03); padding: var(--space-sm); }
+
+.invoice-section-title {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  margin-bottom: var(--space-xs);
+}
+
+.invoice-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+  line-height: 1.7;
+}
+
+.invoice-row--total {
+  font-weight: 700;
+  border-top: 1px solid rgba(80,55,30,0.15);
+  padding-top: 4px;
+  margin-top: 2px;
+}
+
+.invoice-key {
+  opacity: 0.6;
+  min-width: 110px;
+}
+
+.invoice-item-title {
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.invoice-item-detail {
+  font-size: 0.7rem;
+  opacity: 0.65;
+  line-height: 1.5;
+}
+
+.invoice-item-price-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-xs);
+  font-size: 0.72rem;
+}
+
+.invoice-item-price-label { opacity: 0.6; }
+.invoice-item-price { font-weight: 700; }
+
+.invoice-fine-print {
+  font-size: 0.62rem;
+  line-height: 1.65;
+  opacity: 0.6;
+  margin-top: var(--space-sm);
+}
+
+.invoice-fine-print p + p { margin-top: var(--space-xs); }
+
+.invoice-handwritten-note {
+  font-family: var(--font-handwritten);
+  font-size: 0.9rem;
+  color: rgba(30,60,120,0.85);
+  transform: rotate(-2deg);
+  display: inline-block;
+  margin-top: var(--space-xs);
+}
+
+/* Detach return slip */
+.return-slip {
+  margin-top: var(--space-md);
+  border-top: 2px dashed rgba(80,55,30,0.25);
+  padding-top: var(--space-sm);
+}
+
+.return-slip-perforation { margin-bottom: var(--space-xs); }
+.perforation-svg { display: block; width: 100%; }
+
+.return-slip-body {
+  display: flex;
+  gap: var(--space-xl);
+  font-size: 0.7rem;
+}
+
+.return-slip-left { flex: 1; }
+.return-slip-options { flex: 1; }
+
+.return-slip-label {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  display: block;
+  margin-bottom: var(--space-xs);
+}
+
+.return-slip-checkbox {
+  display: flex;
+  gap: var(--space-xs);
+  align-items: flex-start;
+  line-height: 1.5;
+  margin-bottom: 2px;
+  cursor: default;
+}
+
+.checkbox-box {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   25. NURSERY POSTCARD — override inline styles with proper classes
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* The nursery postcard uses the .postcard + .mail-piece double class.
+   These overrides ensure it participates in the unified shadow/hover system
+   while keeping its wider format. */
+
+#postcard-nursery-01 {
+  /* Width is set by the mail-piece wrapper from manifest — don't override */
+  border-radius: 2px;
+  font-family: var(--font-body);
+  display: flex;
+  overflow: hidden;
+  background: var(--color-paper-white);
+  /* Remove inline box-shadow so --shadow-paper from .mail-piece applies */
+  box-shadow: var(--shadow-paper) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   26. SCROLL-PROGRESS INDICATOR
+   A thin warm tape-coloured line at the top that fills as you scroll.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--color-stamp-red), var(--color-cancellation-purple));
+  z-index: 99999;
+  transition: width 0.1s linear;
+  pointer-events: none;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   27. CANVAS ENTRY ANIMATION
+   Mail pieces fade and drift in on load — staggered by index.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes pieceArrive {
+  from {
+    opacity: 0;
+    translate: 0 12px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mail-piece {
+    animation: pieceArrive 0.55s cubic-bezier(0.34, 1.06, 0.64, 1) both;
+  }
+
+  /* Stagger each piece — loader injects in manifest order */
+  .mail-piece:nth-child(1) { animation-delay: 0.05s; }
+  .mail-piece:nth-child(2) { animation-delay: 0.15s; }
+  .mail-piece:nth-child(3) { animation-delay: 0.25s; }
+  .mail-piece:nth-child(4) { animation-delay: 0.35s; }
+  .mail-piece:nth-child(5) { animation-delay: 0.45s; }
+  .mail-piece:nth-child(6) { animation-delay: 0.55s; }
+  .mail-piece:nth-child(7) { animation-delay: 0.65s; }
+  .mail-piece:nth-child(8) { animation-delay: 0.75s; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   21. DRAWER — junk-mail drawer. Starts covering the viewport.
+       Handle is at the TOP. User pulls DOWN to open.
+       Drawer slides DOWN off-screen (translateY +100vh), revealing desk.
+
+   Architecture:
+     #drawer          position:fixed, starts at top:0, height 100vh + tab height above
+       #drawer-face   the visible kraft front panel
+         #pull-tab-wrapper  at the very TOP of the face — handle peeks above viewport? No:
+                            wrapper is at top:-72px so tab hangs ABOVE the face top,
+                            peeking down into the viewport at page-top.
+         #drawer-label      centred on the face below the handle zone
+
+   State classes on #drawer:
+     (none)              — initial: translateY(0) — face covers full viewport,
+                           tab peeks at top
+     .drawer--open       — translateY(+100vh) — slides down off screen
+     .drawer--open-instant — same, no transition
+     .drawer--closing    — translateY(0) — slides back up to cover
+
+   Drag direction: downward (positive delta) commits open if > 80px.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Drawer shell ─────────────────────────────────────────────────────────── */
+
+#drawer {
+  position: fixed;
+  /* Sit the shell so the face covers the viewport exactly.
+     The tab lives ABOVE the face, so we give the shell extra room at top. */
+  top: -50px;                    /* pull-tab height above face */
+  left: 0;
+  width: 100%;
+  height: calc(100vh + 80px);   /* face + tab headroom */
+  z-index: 8000;
+  transform: translateY(0);
+  transition: transform 2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+  pointer-events: all;
+}
+
+/* Slides DOWN off-screen to reveal desk */
+#drawer.drawer--open {
+  transform: translateY(calc(100vh + 80px));
+  pointer-events: none;
+}
+
+#drawer.drawer--open-instant {
+  transform: translateY(calc(100vh + 80px));
+  transition: none;
+  pointer-events: none;
+}
+
+#drawer.drawer--closing {
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+/* ── Drawer face — kraft paper surface ──────────────────────────────────── */
+
+#drawer-face {
+  position: absolute;
+  /* Face starts 80px down inside the shell (tab lives above this) */
+  top: 80px;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+
+  background-color: #C4975A;
+  background-image:
+    repeating-linear-gradient(
+      -3deg,
+      transparent               0px,
+      transparent               18px,
+      rgba(255, 240, 200, 0.04) 18px,
+      rgba(255, 240, 200, 0.04) 19px
+    ),
+    repeating-linear-gradient(
+      89deg,
+      transparent              0px,
+      transparent              7px,
+      rgba(100, 65, 20, 0.06)  7px,
+      rgba(100, 65, 20, 0.06)  8px
+    );
+
+  /* Top edge shadow — this is the "lip" of the drawer above the desk */
+  box-shadow:
+    inset 0    0    160px rgba(60, 35, 10, 0.18),
+    inset 0    8px   24px rgba(40, 22,  8, 0.28),
+    0    -6px  20px  rgba(40, 22,  8, 0.45);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Top lip of the drawer face — flat wood-grain bar, matches side/floor rails */
+#drawer-face::before {
+  content: '';
+  position: absolute;
+  top: -36px;
+  left: 0;
+  right: 0;
+  height: 36px;
+
+  background-color: #7A5C32;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent              0px,
+      transparent              6px,
+      rgba(60, 35, 10, 0.08)  6px,
+      rgba(60, 35, 10, 0.08)  7px
+    ),
+    repeating-linear-gradient(
+      85deg,
+      transparent              0px,
+      transparent             14px,
+      rgba(40, 22,  8, 0.05) 14px,
+      rgba(40, 22,  8, 0.05) 15px
+    );
+  box-shadow: inset 0 -4px 12px rgba(40, 22, 8, 0.30),
+              inset 0  2px  4px rgba(255, 200, 120, 0.06);
+  pointer-events: none;
+}
+
+/* ── Drawer sides — permanent rails framing the desk ────────────────────── */
+/* body::before = left rail, body::after = right rail.
+   These stay visible always — the drawer walls remain as the desk frame. */
+
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 36px;
+  z-index: 7900;             /* above canvas, below drawer face */
+  pointer-events: none;
+
+  background-color: #7A5C32;
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      transparent              0px,
+      transparent              6px,
+      rgba(60, 35, 10, 0.08)  6px,
+      rgba(60, 35, 10, 0.08)  7px
+    ),
+    repeating-linear-gradient(
+      175deg,
+      transparent              0px,
+      transparent             14px,
+      rgba(40, 22,  8, 0.05) 14px,
+      rgba(40, 22,  8, 0.05) 15px
+    );
+}
+
+body::before {
+  left: 0;
+  box-shadow: inset -6px 0 16px rgba(40, 22, 8, 0.35),
+              inset  2px 0  4px rgba(255, 200, 120, 0.06);
+}
+
+body::after {
+  right: 0;
+  box-shadow: inset  6px 0 16px rgba(40, 22, 8, 0.35),
+              inset -2px 0  4px rgba(255, 200, 120, 0.06);
+}
+
+/* ── Floor bar — same wood grain as side rails ───────────────────────────── */
+
+#drawer-floor {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 36px;
+  z-index: 7900;
+  pointer-events: none;
+
+  background-color: #7A5C32;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent              0px,
+      transparent              6px,
+      rgba(60, 35, 10, 0.08)  6px,
+      rgba(60, 35, 10, 0.08)  7px
+    ),
+    repeating-linear-gradient(
+      85deg,
+      transparent              0px,
+      transparent             14px,
+      rgba(40, 22,  8, 0.05) 14px,
+      rgba(40, 22,  8, 0.05) 15px
+    );
+  box-shadow: inset 0 6px 16px rgba(40, 22, 8, 0.35),
+              inset 0 -2px  4px rgba(255, 200, 120, 0.06);
+}
+
+/* ── Drawer label — wordmark + subtitle ─────────────────────────────────── */
+
+#drawer-label {
+  text-align: center;
+  user-select: none;
+  /* Nudge down slightly — handle is at top, so content sits centre-low */
+  margin-top: 60px;
+}
+
+#drawer-wordmark {
+  display: inline-block;
+  font-family: var(--font-logo);
+  font-size: clamp(3rem, 7vw, 6rem);
+  color: rgba(242, 236, 216, 0.92);
+  letter-spacing: 0.12em;
+  text-shadow:
+    0 2px 8px rgba(40, 22, 8, 0.4),
+    0 1px 0   rgba(255, 245, 220, 0.15);
+  transform: rotate(-1.4deg);
+}
+
+#drawer-subtitle {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  letter-spacing: 0.22em;
+  text-transform: lowercase;
+  color: rgba(242, 236, 216, 0.52);
+  margin-top: 0.5rem;
+  transform: rotate(-1.4deg);
+  display: block;
+}
+
+/* ── Pull tab wrapper — tab sits at top of the drawer face ───────────────── */
+
+#pull-tab-wrapper {
+  position: absolute;
+  top: -2px;               /* flush with the very top of the drawer face */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+/* ── Pull tab button ─────────────────────────────────────────────────────── */
+
+#pull-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  cursor: s-resize;        /* south-resize cursor — pull downward */
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Hover: nudge DOWN to reinforce the pull-down direction */
+#pull-tab:hover {
+  transform: translateY(-6px);
+}
+
+#pull-tab:active {
+  transform: translateY(-12px);
+  transition-duration: 0.08s;
+}
+
+#pull-tab:focus-visible {
+  outline: 2px solid rgba(212, 160, 23, 0.8);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+#pull-tab-svg {
+  width: 160px;
+  height: 72px;
+  display: block;
+  filter: drop-shadow(0 -4px 12px rgba(40, 22, 8, 0.55))
+          drop-shadow(0 -1px  3px rgba(40, 22, 8, 0.35));
+}
+
+/* Bob: floats UP then settles — invites downward pull */
+@keyframes tabBob {
+  0%,  100% { transform: translateY(0);    }
+  40%        { transform: translateY(-12px); }
+  65%        { transform: translateY(-6px);  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #pull-tab {
+    animation: tabBob 4s cubic-bezier(0.45, 0, 0.55, 1) 1.2s infinite;
+  }
+  #pull-tab:hover,
+  #pull-tab:active {
+    animation-play-state: paused;
+  }
+}
+
+/* Hint text — sits below the tab card, on the drawer face */
+#pull-tab-hint {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: rgba(242, 236, 216, 0.4);
+  text-transform: lowercase;
+  white-space: nowrap;
+  margin-top: 6px;
+}
+
+#pull-tab-hint kbd {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  padding: 1px 4px;
+  border: 1px solid rgba(242, 236, 216, 0.25);
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+}
+
+/* ── Retract handle — original text-button card, centered on the floor bar ──
+   Wrapped in #retract-handle-wrapper so the same bob/drag-to-close
+   mechanic that drives the open pull-tab can be layered onto it without
+   fighting the button's own translateX(-50%) centering. ────────────────── */
+
+#retract-handle-wrapper {
+  position: fixed;
+  bottom: 24px;              /* sits on top of the 36px floor bar */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 7000;             /* below floor bar, below drawer */
+  pointer-events: all;
+}
+
+#retract-handle {
+  display: block;
+  background: rgba(122, 92, 50, 0.96);
+  border: none;
+  border-radius: 4px 4px 0 0;   /* flat bottom flush with floor bar */
+  padding: 6px 24px 15px;
+  cursor: n-resize;
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(242, 220, 180, 0.75);
+  box-shadow: 0 -3px 10px rgba(40, 22, 8, 0.35),
+              inset 0 1px 0 rgba(255, 200, 120, 0.12);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+#retract-handle:hover {
+  background: rgba(140, 108, 62, 1);
+  transform: translateY(-2px);
+}
+
+#retract-handle:active {
+  transform: translateY(2px);
+}
+
+#retract-handle:focus-visible {
+  outline: 2px solid rgba(212, 160, 23, 0.8);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+#retract-handle span {
+  display: block;
+  line-height: 1.4;
+}
+
+/* Bob: nudges UP then settles — invites upward pull, mirror of tabBob */
+@keyframes retractBob {
+  0%,  100% { transform: translateY(0);    }
+  40%        { transform: translateY(-8px); }
+  65%        { transform: translateY(-4px); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #retract-handle {
+    animation: retractBob 4s cubic-bezier(0.45, 0, 0.55, 1) 1.2s infinite;
+  }
+  #retract-handle:hover,
+  #retract-handle:active {
+    animation-play-state: paused;
+  }
+}
+
+/* ── Scroll progress ─────────────────────────────────────────────────────── */
+
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--color-stamp-red), var(--color-cancellation-purple));
+  z-index: 9001;
+  pointer-events: none;
+}
+
+/* ── Canvas entry animations once drawer opens ───────────────────────────── */
+
+@keyframes pieceArrive {
+  from { opacity: 0; translate: 0 16px; }
+  to   { opacity: 1; translate: 0 0;    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mail-piece {
+    animation: pieceArrive 0.6s cubic-bezier(0.34, 1.06, 0.64, 1) both;
+  }
+  .mail-piece:nth-child(1)  { animation-delay: 0.12s; }
+  .mail-piece:nth-child(2)  { animation-delay: 0.22s; }
+  .mail-piece:nth-child(3)  { animation-delay: 0.32s; }
+  .mail-piece:nth-child(4)  { animation-delay: 0.42s; }
+  .mail-piece:nth-child(5)  { animation-delay: 0.52s; }
+  .mail-piece:nth-child(6)  { animation-delay: 0.62s; }
+  .mail-piece:nth-child(7)  { animation-delay: 0.72s; }
+  .mail-piece:nth-child(8)  { animation-delay: 0.82s; }
+  .mail-piece:nth-child(9)  { animation-delay: 0.92s; }
+  .mail-piece:nth-child(10) { animation-delay: 1.02s; }
+  .mail-piece:nth-child(11) { animation-delay: 1.12s; }
+  .mail-piece:nth-child(12) { animation-delay: 1.22s; }
+  .mail-piece:nth-child(13) { animation-delay: 1.32s; }
+  .mail-piece:nth-child(14) { animation-delay: 1.42s; }
+  .mail-piece:nth-child(15) { animation-delay: 1.52s; }
+  .mail-piece:nth-child(16) { animation-delay: 1.62s; }
+  .mail-piece:nth-child(17) { animation-delay: 1.72s; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   28. PILE MODE — canvas lives inside drawer, all mail stacked as a pile
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* When #canvas is inside the drawer (pile mode), it fills the drawer face
+   and does not scroll. Min-height is set by JS to fit the pile snugly. */
+
+#drawer.drawer--pile #drawer-face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Canvas in pile mode: fixed size centred on the drawer face */
+#canvas.canvas--pile {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  min-height: 560px;
+  height: 560px;
+  padding: 0;
+  box-shadow: none;
+  background: none;
+  margin: 0 auto;
+  /* Override the desktop striped background */
+  background-image: none;
+}
+
+/* Mail pieces in pile mode: pointer is grab, cursor shows liftability */
+#canvas.canvas--pile .mail-piece {
+  cursor: grab;
+}
+
+#canvas.canvas--pile .mail-piece:active {
+  cursor: grabbing;
+}
+
+/* Liftable pieces (top 10) show a subtle ring on hover */
+#canvas.canvas--pile .mail-piece.is-liftable:hover {
+  outline: 1.5px solid rgba(192, 57, 43, 0.35);
+  outline-offset: 3px;
+}
+
+/* When a piece is being lifted to top */
+#canvas.canvas--pile .mail-piece.is-lifting {
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.18s ease,
+              z-index 0s;
+}
+
+/* Pile depth hint — subtle shadow stack illusion */
+#canvas.canvas--pile::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 420px;
+  height: 220px;
+  transform: translate(-50%, -50%) rotate(2deg);
+  background: rgba(80, 55, 30, 0.06);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#canvas.canvas--pile::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 210px;
+  transform: translate(-50%, -50%) rotate(-3deg) translateY(6px);
+  background: rgba(80, 55, 30, 0.04);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   29. OVERLAY — "Send to Desktop" button
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.overlay-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-xl);
+  border-top: 1px solid rgba(80, 55, 30, 0.10);
+  background: rgba(242, 236, 216, 0.4);
+  border-radius: 0 0 2px 2px;
+}
+
+.btn-send-desktop {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 7px var(--space-md);
+  background: var(--color-usps-blue);
+  color: var(--color-paper-white);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.12s ease;
+  box-shadow: 0 2px 6px rgba(0, 75, 135, 0.30);
+}
+
+.btn-send-desktop:hover {
+  background: #003a6b;
+  transform: translateY(-1px);
+}
+
+.btn-send-desktop:active {
+  transform: translateY(0);
+}
+
+.btn-send-desktop svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+/* Confirmation flash when piece is sent */
+.btn-send-desktop.sent {
+  background: #27ae60;
+  pointer-events: none;
+}
+
+.overlay-sent-label {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: rgba(80, 55, 30, 0.55);
+  letter-spacing: 0.06em;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   30. DESKTOP PAGE (chapter-two) — sorting surface
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+body.page--desktop {
+  background-color: var(--color-desk);
+  min-height: 100vh;
+}
+
+#desktop-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-xl);
+  gap: var(--space-lg);
+  background: rgba(122, 92, 50, 0.97);
+  box-shadow: 0 2px 8px rgba(40, 22, 8, 0.35);
+}
+
+.desktop-nav-logo {
+  font-family: var(--font-logo);
+  font-size: 1.1rem;
+  color: rgba(242, 220, 180, 0.9);
+  letter-spacing: 0.12em;
+}
+
+.desktop-nav-sep {
+  color: rgba(242, 220, 180, 0.3);
+  font-size: 0.7rem;
+}
+
+.desktop-nav-title {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(242, 220, 180, 0.55);
+}
+
+#desktop-nav a {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: rgba(242, 220, 180, 0.65);
+  text-decoration: none;
+  margin-left: auto;
+  transition: color 0.15s;
+}
+
+#desktop-nav a:hover { color: rgba(242, 220, 180, 0.95); }
+
+/* Desktop canvas — the sorting surface below the nav */
+#desktop-canvas {
+  position: relative;
+  min-height: 100vh;
+  padding: 60px 44px 80px;
+  /* Same pinstripe as main canvas */
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--stripe-a) 0px,
+    var(--stripe-a) 4px,
+    var(--stripe-b) 4px,
+    var(--stripe-b) 8px
+  );
+  box-shadow:
+    inset  80px  80px 160px rgba(255, 245, 220, 0.18),
+    inset -80px -80px 160px rgba(60,  35,  10, 0.14);
+}
+
+/* Empty state — shown until first piece arrives */
+#desktop-empty {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+}
+
+#desktop-empty.is-hidden { opacity: 0; }
+
+#desktop-empty-icon {
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--space-md);
+  opacity: 0.4;
+}
+
+#desktop-empty-label {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(80, 55, 30, 0.6);
+}
+
+/* Pieces on the desktop are draggable */
+#desktop-canvas .mail-piece {
+  cursor: grab;
+  position: absolute;
+}
+
+#desktop-canvas .mail-piece:active {
+  cursor: grabbing;
+}
+
+#desktop-canvas .mail-piece.is-dragging {
+  opacity: 0.88;
+  box-shadow: var(--shadow-paper-hover);
+  z-index: 9000 !important;
+}
+
+/* Piece count badge in nav */
+#desktop-count {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  background: rgba(192, 57, 43, 0.85);
+  color: white;
+  padding: 1px 7px 2px;
+  border-radius: 10px;
+  margin-left: var(--space-sm);
+  min-width: 18px;
+  text-align: center;
+  display: inline-block;
+  vertical-align: middle;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+#desktop-count.bump {
+  transform: scale(1.4);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   31. DRAWER PILE — pieces sent from desk into the drawer
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+#drawer-pile {
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  height: 420px;
+  margin: 0 auto;
+  /* pulled up slightly so it doesn't crowd the label */
+  margin-top: var(--space-xl);
+}
+
+#drawer-pile-empty {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(242, 220, 180, 0.28);
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+#drawer-pile-empty.is-hidden {
+  opacity: 0;
+}
+
+/* Pieces inside the drawer pile */
+#drawer-pile .mail-piece {
+  cursor: grab;
+  position: absolute;
+}
+
+#drawer-pile .mail-piece:active {
+  cursor: grabbing;
+}
+
+/* Piece arriving animation — drops in from slight above */
+@keyframes drawerArrive {
+  from {
+    opacity: 0;
+    transform: translateY(-18px) rotate(var(--arrive-rot, 0deg));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--arrive-rot, 0deg));
+  }
+}
+
+#drawer-pile .mail-piece.is-arriving {
+  animation: drawerArrive 0.45s cubic-bezier(0.34, 1.06, 0.64, 1) both;
+}
+
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   32. PERMIT BLOCK
+   Replaces adhesive stamp on bulk, business, non-profit, and govt mail.
+   Four variants: default, --govt, --nonprofit, --dotmatrix.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.permit-block {
+  position: absolute;
+  top: var(--space-lg);
+  right: var(--space-sm);
+  width: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  border: 1px solid rgba(26, 26, 26, 0.55);
+  padding: 3px 4px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.permit-block__line {
+  font-family: var(--font-body);
+  font-size: 5.5px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--color-ink-black);
+  line-height: 1.4;
+  display: block;
+}
+
+.permit-block__permit {
+  font-weight: 400;
+  opacity: 0.75;
+  font-size: 5px;
+}
+
+/* Government permit — thicker border, slightly wider */
+.permit-block--govt {
+  border-width: 1.5px;
+  width: 68px;
+}
+
+/* Non-profit — same as default */
+.permit-block--nonprofit { }
+
+/* Dot-matrix — mimics impact printer output on kraft label */
+.permit-block--dotmatrix {
+  border-color: rgba(26, 26, 26, 0.40);
+  background: var(--color-paper-white);
+}
+
+.permit-block--dotmatrix .permit-block__line {
+  font-size: 5px;
+  letter-spacing: 0.06em;
+  opacity: 0.80;
+}
+
+/* Inline permit — sits in a mailing strip with address, not top-right corner */
+.permit-block--inline {
+  position: relative;
+  top: auto;
+  right: auto;
+  flex-shrink: 0;
+}
+
+/* Small variant for 4×6 ad postcards */
+.permit-block--sm {
+  width: 58px;
+}
+
+/* ValPak variant — inverted (white text on dark) */
+.permit-block--valpak {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.5);
+}
+.permit-block--valpak .permit-block__line {
+  color: white;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   33. AD POSTCARD (appointment reminder / promotional)
+   Matte cardstock, 4×6, two-sided, permit block instead of stamp.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ad-postcard {
+  width: 384px;
+  height: 256px;
+  background-color: var(--color-paper-white);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.ad-postcard__front {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-md) var(--space-lg);
+  gap: var(--space-sm);
+  background-color: var(--color-paper-white);
+}
+
+.ad-postcard__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  border-bottom: 1.5px solid rgba(80,55,30,0.15);
+  padding-bottom: var(--space-xs);
+}
+
+.ad-postcard__logo-icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.ad-postcard__sender-name {
+  font-family: var(--font-logo);
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-black);
+}
+
+.ad-postcard__offer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ad-postcard__offer-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--color-stamp-red);
+}
+
+.ad-postcard__offer-headline {
+  font-family: var(--font-logo);
+  font-size: 1.4rem;
+  line-height: 1.15;
+  color: var(--color-ink-black);
+}
+
+.ad-postcard__offer-dates {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  opacity: 0.65;
+  margin-top: 2px;
+}
+
+.ad-postcard__body {
+  font-family: var(--font-print);
+  font-size: 0.68rem;
+  line-height: 1.55;
+  opacity: 0.80;
+}
+
+.ad-postcard__body p + p { margin-top: var(--space-xs); }
+
+.ad-postcard__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  opacity: 0.55;
+  margin-top: auto;
+  padding-top: var(--space-xs);
+  border-top: 1px solid rgba(80,55,30,0.10);
+}
+
+/* Back side — split layout */
+.ad-postcard__back {
+  position: absolute;
+  inset: 0;
+  display: none; /* JS flips, same flip mechanic as postcard */
+  gap: 0;
+  background-color: var(--color-paper-white);
+}
+
+.ad-postcard__back-message {
+  flex: 1;
+  padding: var(--space-md);
+  border-right: 1px solid rgba(80,55,30,0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-xs);
+}
+
+.ad-postcard__back-tagline {
+  font-family: var(--font-logo);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.ad-postcard__back-sub {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  opacity: 0.60;
+  line-height: 1.5;
+}
+
+.ad-postcard__address-col {
+  position: relative;
+  width: 48%;
+  padding: var(--space-md) var(--space-sm) var(--space-md) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--space-xs);
+}
+
+.ad-postcard__recipient {
+  font-size: 0.68rem;
+}
+
+/* When the ad-postcard is the visible face, show front, hide back */
+#postcard-nursery-01 .ad-postcard__front  { display: flex; }
+#postcard-nursery-01 .ad-postcard__back   { display: none; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   34. CD-ROM / FLOPPY SLEEVE (AOL mailer)
+   Self-contained glossy cardstock, cobalt + yellow 90s palette,
+   perforated zip-strip on back, bulk permit on front face.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.cd-sleeve {
+  width: 220px;
+  height: 220px;
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.cd-sleeve__front {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: #0047AB;   /* cobalt — period-accurate AOL blue */
+  color: white;
+  overflow: hidden;
+}
+
+.cd-sleeve__band {
+  background: #FFD700;          /* AOL yellow */
+  padding: 5px var(--space-sm);
+  display: flex;
+  align-items: center;
+}
+
+.cd-sleeve__brand {
+  font-family: var(--font-logo);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: #0047AB;
+}
+
+.cd-sleeve__headline-block {
+  padding: var(--space-sm) var(--space-md) 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.cd-sleeve__free-hours {
+  font-family: var(--font-logo);
+  font-size: 2.8rem;
+  line-height: 0.9;
+  color: #FFD700;
+  letter-spacing: -0.02em;
+}
+
+.cd-sleeve__free-unit {
+  font-size: 1.1rem;
+  letter-spacing: 0.12em;
+  vertical-align: super;
+  margin-left: 2px;
+}
+
+.cd-sleeve__free-label {
+  font-family: var(--font-logo);
+  font-size: 1.6rem;
+  color: white;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.cd-sleeve__sub {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.10em;
+  color: rgba(255,255,255,0.75);
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+
+.cd-sleeve__features {
+  padding: var(--space-xs) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.cd-sleeve__feature {
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.82);
+  line-height: 1.5;
+}
+
+.cd-sleeve__disc-graphic {
+  position: absolute;
+  right: var(--space-sm);
+  top: 38px;
+  width: 60px;
+  height: 60px;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+/* Mailing strip at bottom of front face */
+.cd-sleeve__mailing-strip {
+  margin-top: auto;
+  background: rgba(0,0,0,0.40);
+  padding: var(--space-xs) var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.cd-sleeve__address {
+  font-size: 0.55rem;
+  color: rgba(255,255,255,0.85);
+  flex: 1;
+}
+
+.cd-sleeve__address .mail-address__name { color: white; font-size: 0.6rem; }
+
+/* Permit inside mailing strip — override absolute positioning */
+.cd-sleeve__mailing-strip .permit-block {
+  position: relative;
+  top: auto; right: auto;
+  flex-shrink: 0;
+  width: 56px;
+  border-color: rgba(255,255,255,0.40);
+  padding: 2px 3px;
+}
+
+.cd-sleeve__mailing-strip .permit-block__line { color: white; }
+
+/* Barcode inside mailing strip */
+.cd-sleeve__mailing-strip .barcode {
+  position: relative;
+  bottom: auto; left: auto; right: auto;
+  height: 12px;
+  width: 50px;
+  flex-shrink: 0;
+}
+
+/* Back face */
+.cd-sleeve__back {
+  position: absolute;
+  inset: 0;
+  display: none;  /* JS flips */
+  flex-direction: column;
+  background-color: #003380;
+}
+
+.cd-sleeve__perf-strip {
+  height: 24px;
+  background: rgba(255,215,0,0.25);
+  border-bottom: 1.5px dashed rgba(255,215,0,0.6);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-sm);
+  gap: var(--space-sm);
+}
+
+.cd-sleeve__perf-label {
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,215,0,0.80);
+}
+
+.cd-sleeve__perf-line {
+  flex: 1;
+  height: 1px;
+  border-top: 1px dashed rgba(255,215,0,0.4);
+}
+
+.cd-sleeve__security-field {
+  flex: 1;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0,71,171,0.6) 0px, rgba(0,71,171,0.6) 6px,
+    rgba(0,51,128,0.6) 6px, rgba(0,51,128,0.6) 12px
+  );
+}
+
+.cd-sleeve__back-copy {
+  padding: var(--space-sm) var(--space-md);
+  font-family: var(--font-body);
+  font-size: 0.52rem;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.55;
+}
+
+.cd-sleeve__back-copy p + p { margin-top: var(--space-xs); }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   35. KRAFT MAILER (Columbia House CD shipment)
+   Coarse brown cardboard, white adhesive shipping label, dot-matrix fonts,
+   thick primitive barcode, bubble-wrap interior, invoice slip.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.kraft-mailer {
+  width: 480px;
+  height: 200px;
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.kraft-mailer__exterior {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  /* Coarse kraft cardboard texture */
+  background-color: #9E7A42;
+  background-image:
+    repeating-linear-gradient(
+      87deg, transparent 0px, transparent 9px,
+      rgba(100,65,20,0.07) 9px, rgba(100,65,20,0.07) 10px
+    ),
+    repeating-linear-gradient(
+      177deg, transparent 0px, transparent 5px,
+      rgba(80,50,15,0.05) 5px, rgba(80,50,15,0.05) 6px
+    );
+  padding: var(--space-sm);
+  gap: var(--space-sm);
+}
+
+.kraft-mailer__logo-band {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+  padding-bottom: var(--space-xs);
+}
+
+.kraft-mailer__logo-svg { width: 180px; height: 32px; flex-shrink: 0; }
+
+.kraft-mailer__logo-sub {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(26,26,26,0.55);
+}
+
+/* White adhesive shipping label */
+.kraft-mailer__label {
+  background-color: var(--color-paper-white);
+  border: 1px solid rgba(26,26,26,0.20);
+  border-radius: 1px;
+  padding: var(--space-sm) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  position: relative;
+  flex: 1;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6),
+              1px 2px 4px rgba(80,55,30,0.18);
+}
+
+/* Return address — dot-matrix style */
+.kraft-mailer__return {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.kraft-mailer__return-line {
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  letter-spacing: 0.04em;
+  color: rgba(26,26,26,0.55);
+  line-height: 1.5;
+}
+
+/* Permit block inside label — override absolute position */
+.kraft-mailer__label .permit-block {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+}
+
+/* Recipient address — dot-matrix */
+.kraft-mailer__recipient {
+  font-size: 0.72rem;
+  margin-top: var(--space-xs);
+}
+
+.mail-address--dotmatrix {
+  font-family: var(--font-body);
+  letter-spacing: 0.03em;
+}
+
+.mail-address--dotmatrix .mail-address__name {
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+
+/* Thick primitive barcode for media mail — taller, fewer bars */
+.barcode--thick {
+  height: 20px;
+  margin-top: var(--space-xs);
+}
+
+.kraft-mailer__acct {
+  font-family: var(--font-body);
+  font-size: 0.52rem;
+  letter-spacing: 0.08em;
+  color: rgba(26,26,26,0.45);
+  margin-top: 2px;
+}
+
+.kraft-mailer__notice {
+  align-self: flex-end;
+  margin-top: auto;
+  opacity: 0.70;
+}
+
+/* Interior — shows when opened (overlay) */
+.kraft-mailer__interior {
+  display: none;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-xl);
+  background-color: var(--color-paper-white);
+  min-height: 400px;
+}
+
+/* Bubble wrap suggestion */
+.kraft-mailer__bubble-wrap {
+  width: 100%;
+  height: 60px;
+  border-radius: 2px;
+  background-image: radial-gradient(
+    circle at 50% 50%,
+    rgba(200,220,240,0.55) 30%,
+    transparent 70%
+  );
+  background-size: 18px 18px;
+  background-color: rgba(210,225,240,0.25);
+  border: 1px solid rgba(180,200,220,0.3);
+}
+
+/* Invoice slip inside mailer */
+.kraft-mailer__invoice {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: var(--color-ink-black);
+  border: 1px solid rgba(80,55,30,0.15);
+  padding: var(--space-md) var(--space-lg);
+  background-color: var(--color-paper-white);
+}
+
+.kraft-mailer__invoice-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid rgba(80,55,30,0.18);
+  padding-bottom: var(--space-xs);
+  margin-bottom: var(--space-sm);
+}
+
+.kraft-mailer__invoice-row {
+  display: flex;
+  gap: var(--space-md);
+  line-height: 1.7;
+  font-size: 0.70rem;
+}
+
+.kraft-mailer__invoice-label {
+  min-width: 140px;
+  font-weight: 700;
+  opacity: 0.60;
+  text-transform: uppercase;
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.kraft-mailer__invoice-row--total {
+  font-weight: 700;
+  border-top: 1px solid rgba(80,55,30,0.15);
+  padding-top: 3px;
+  margin-top: 3px;
+}
+
+.kraft-mailer__invoice-note {
+  font-size: 0.60rem;
+  line-height: 1.6;
+  opacity: 0.60;
+  margin-top: var(--space-sm);
+  padding-top: var(--space-xs);
+  border-top: 1px dashed rgba(80,55,30,0.20);
+}
+
+.kraft-mailer__invoice-footer {
+  font-size: 0.60rem;
+  opacity: 0.50;
+  margin-top: var(--space-xs);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   36. CREDIT ENVELOPE (No. 10 glossy, pre-approved offer)
+   Bold promo exterior in stamp-red, window reveals security-tinted back,
+   fake credit card, application form, nested return envelope inside.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Credit variant of the base envelope */
+.envelope--credit {
+  width: 440px;
+  height: 182px;
+}
+
+.envelope--credit .envelope-back {
+  background-color: var(--color-paper-white);
+}
+
+/* Security tint on back interior — prevents reading through envelope */
+.envelope-back__security-tint {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(36, 113, 163, 0.06) 0px, rgba(36, 113, 163, 0.06) 4px,
+    rgba(36, 113, 163, 0.02) 4px, rgba(36, 113, 163, 0.02) 8px
+  );
+  pointer-events: none;
+}
+
+/* Bold promo printed on envelope exterior */
+.credit-exterior {
+  position: absolute;
+  bottom: 28px;
+  left: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.credit-exterior__urgent {
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-stamp-red);
+  border: 1px solid var(--color-stamp-red);
+  padding: 1px 4px;
+  display: inline-block;
+  align-self: flex-start;
+}
+
+.credit-exterior__preapproved {
+  font-family: var(--font-logo);
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: var(--color-ink-black);
+  line-height: 1;
+}
+
+.credit-exterior__sub {
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  opacity: 0.60;
+  letter-spacing: 0.04em;
+}
+
+/* Return address on credit envelope */
+.envelope--credit .envelope__return {
+  position: absolute;
+  top: var(--space-sm);
+  left: var(--space-md);
+  font-size: 0.60rem;
+  opacity: 0.70;
+}
+
+/* ── Credit letter interior ── */
+.credit-letter {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  line-height: 1.7;
+  padding: var(--space-xl);
+  max-width: 560px;
+}
+
+.credit-letter__header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: var(--space-lg);
+}
+
+.credit-letter__sender-name {
+  font-family: var(--font-logo);
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+}
+
+.credit-letter__sender-addr,
+.credit-letter__date {
+  font-size: 0.65rem;
+  opacity: 0.60;
+}
+
+.credit-letter__date { margin-top: var(--space-xs); }
+
+.credit-letter__address-block {
+  font-size: 0.72rem;
+  margin-bottom: var(--space-md);
+}
+
+.credit-letter__salutation {
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+  display: block;
+}
+
+.credit-letter p { margin-bottom: var(--space-sm); }
+
+.credit-letter__features {
+  margin: var(--space-xs) 0 var(--space-sm) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 0.70rem;
+}
+
+.credit-letter__features li { line-height: 1.6; }
+
+.credit-letter__sign-block {
+  margin-top: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.72rem;
+}
+
+.credit-letter__sig {
+  font-family: var(--font-handwritten);
+  font-size: 1.3rem;
+  line-height: 1;
+  transform: rotate(-2deg);
+  display: inline-block;
+  margin-bottom: 2px;
+}
+
+.credit-letter__fine-print {
+  font-size: 0.56rem;
+  opacity: 0.50;
+  line-height: 1.6;
+  margin-top: var(--space-md);
+  padding-top: var(--space-xs);
+  border-top: 1px solid rgba(80,55,30,0.12);
+}
+
+/* ── Fake credit card replica ── */
+.credit-card-replica {
+  width: 280px;
+  height: 176px;
+  background: linear-gradient(135deg, #1a237e 0%, #283593 60%, #3949ab 100%);
+  border-radius: 8px;
+  position: relative;
+  margin: var(--space-md) var(--space-xl);
+  box-shadow: 2px 4px 12px rgba(26,35,126,0.35);
+  font-family: var(--font-body);
+  color: white;
+  overflow: hidden;
+}
+
+.credit-card-replica__chip {
+  position: absolute;
+  top: 28px;
+  left: 20px;
+  width: 36px;
+  height: 28px;
+  background: linear-gradient(135deg, #d4af37, #f0d060, #d4af37);
+  border-radius: 3px;
+  border: 1px solid rgba(200,160,0,0.5);
+}
+
+.credit-card-replica__number {
+  position: absolute;
+  bottom: 48px;
+  left: 20px;
+  font-size: 0.78rem;
+  letter-spacing: 0.20em;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+.credit-card-replica__label {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-md);
+  font-size: 0.60rem;
+  letter-spacing: 0.12em;
+  opacity: 0.80;
+}
+
+.credit-card-replica__network {
+  position: absolute;
+  bottom: var(--space-sm);
+  right: var(--space-md);
+  font-family: var(--font-logo);
+  font-size: 1.0rem;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  color: rgba(255,220,80,0.90);
+}
+
+.credit-card-replica__name {
+  position: absolute;
+  bottom: 28px;
+  left: 20px;
+  font-size: 0.65rem;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+
+.credit-card-replica__watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-25deg);
+  font-size: 0.52rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.18);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ── Application / acceptance form ── */
+.credit-app {
+  border: 1.5px solid rgba(80,55,30,0.25);
+  padding: var(--space-md) var(--space-lg);
+  margin: var(--space-md) var(--space-xl);
+  font-family: var(--font-body);
+  font-size: 0.70rem;
+}
+
+.credit-app__header {
+  font-weight: 700;
+  font-size: 0.62rem;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid rgba(80,55,30,0.20);
+  padding-bottom: var(--space-xs);
+  margin-bottom: var(--space-sm);
+}
+
+.credit-app__row {
+  display: flex;
+  gap: var(--space-sm);
+  line-height: 1.8;
+  border-bottom: 1px solid rgba(80,55,30,0.10);
+  padding: 2px 0;
+}
+
+.credit-app__label {
+  min-width: 120px;
+  font-size: 0.62rem;
+  opacity: 0.60;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.credit-app__field { flex: 1; }
+
+.credit-app__field--blank {
+  opacity: 0.35;
+  letter-spacing: 0.04em;
+}
+
+.credit-app__sig-block {
+  margin-top: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.credit-app__sig-label {
+  font-size: 0.60rem;
+  opacity: 0.60;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.credit-app__sig-line {
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid rgba(80,55,30,0.25);
+  padding-bottom: 2px;
+  display: block;
+}
+
+.credit-app__sig-date {
+  font-size: 0.65rem;
+  opacity: 0.55;
+}
+
+.credit-app__fine-print {
+  font-size: 0.55rem;
+  opacity: 0.45;
+  line-height: 1.5;
+  margin-top: var(--space-xs);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   37. RETURN ENVELOPE (nested inside credit, charity mailers)
+   Business Reply Mail or pre-addressed small envelope.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.return-envelope {
+  width: 260px;
+  height: 110px;
+  background-color: var(--color-paper-white);
+  border: 1px solid rgba(80,55,30,0.22);
+  border-radius: 1px;
+  margin: var(--space-md) var(--space-xl);
+  position: relative;
+  box-shadow: 1px 2px 5px rgba(80,55,30,0.14);
+}
+
+.return-envelope__front {
+  position: absolute;
+  inset: 0;
+  padding: var(--space-sm) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-xs);
+}
+
+.return-envelope__brmline {
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--color-ink-black);
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+.return-envelope__brmfoot {
+  font-size: 0.50rem;
+  letter-spacing: 0.06em;
+  opacity: 0.55;
+  margin-top: 2px;
+  text-transform: uppercase;
+}
+
+.return-envelope__address {
+  margin-top: var(--space-xs);
+  font-size: 0.65rem;
+}
+
+/* Non-profit return envelope variant */
+.return-envelope__brmline--np {
+  color: #27ae60;
+  font-size: 0.52rem;
+}
+
+/* RSVP return envelope — smaller, ivory */
+.return-envelope--rsvp {
+  width: 200px;
+  height: 90px;
+  background-color: var(--color-aged-paper);
+  border-color: rgba(80,55,30,0.18);
+}
+
+.return-envelope--rsvp .return-envelope__address {
+  font-family: var(--font-print);
+  font-size: 0.65rem;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   38. GROCERY CIRCULAR (oversized newsprint, bare mailer)
+   Large format, no envelope, dense product grid, clip-out coupon.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.circular {
+  width: 480px;
+  border-radius: 2px;
+  overflow: hidden;
+  background-color: var(--color-paper-white);
+  /* Newsprint texture */
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent 0px, transparent 28px,
+    rgba(80,55,30,0.035) 28px, rgba(80,55,30,0.035) 29px
+  );
+}
+
+.circular__page { padding: var(--space-md) var(--space-lg); }
+
+.circular__masthead {
+  text-align: center;
+  border-bottom: 3px double rgba(80,55,30,0.25);
+  padding-bottom: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.circular__store-name {
+  font-family: var(--font-logo);
+  font-size: 1.5rem;
+  letter-spacing: 0.08em;
+  color: var(--color-ink-black);
+}
+
+.circular__tagline {
+  font-family: var(--font-print);
+  font-style: italic;
+  font-size: 0.68rem;
+  opacity: 0.60;
+  margin-top: 2px;
+}
+
+.circular__week {
+  font-family: var(--font-body);
+  font-size: 0.60rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-stamp-red);
+  margin-top: var(--space-xs);
+}
+
+/* Product grid */
+.circular__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.circular__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid rgba(80,55,30,0.12);
+  padding: var(--space-sm);
+  gap: 3px;
+  background-color: rgba(255,255,255,0.6);
+  text-align: center;
+}
+
+.circular__item--featured {
+  grid-column: span 1;
+  border: 2px solid var(--color-stamp-red);
+  background-color: rgba(192,57,43,0.04);
+}
+
+.circular__item-art {
+  width: 60px;
+  height: 60px;
+  display: block;
+}
+
+.circular__item-name {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.circular__item-desc {
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  opacity: 0.55;
+  line-height: 1.4;
+}
+
+.circular__item-price {
+  margin-top: auto;
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+}
+
+.circular__price-amount {
+  font-family: var(--font-logo);
+  font-size: 1.2rem;
+  color: var(--color-stamp-red);
+  line-height: 1;
+}
+
+.circular__price-unit {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  opacity: 0.70;
+}
+
+/* Clip-out coupon */
+.circular__item--coupon {
+  grid-column: span 1;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.circular__coupon-border {
+  border: 2px dashed rgba(80,55,30,0.35);
+  padding: var(--space-sm);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  position: relative;
+}
+
+.circular__coupon-scissors {
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  letter-spacing: -0.02em;
+  color: rgba(80,55,30,0.45);
+  position: absolute;
+  top: -10px;
+  left: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.circular__coupon-headline {
+  font-family: var(--font-logo);
+  font-size: 1.1rem;
+  color: var(--color-stamp-red);
+  line-height: 1;
+}
+
+.circular__coupon-product {
+  font-family: var(--font-body);
+  font-size: 0.60rem;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+.circular__coupon-exp {
+  font-family: var(--font-body);
+  font-size: 0.50rem;
+  opacity: 0.50;
+  margin-top: auto;
+}
+
+/* Mailing zone at bottom */
+.circular__mailing-zone {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: var(--space-sm);
+  border-top: 2px solid rgba(80,55,30,0.20);
+  margin-top: var(--space-sm);
+  gap: var(--space-lg);
+}
+
+.circular__mailing-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.circular__store-addr {
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  opacity: 0.65;
+  letter-spacing: 0.02em;
+}
+
+.circular__hours {
+  font-family: var(--font-body);
+  font-size: 0.54rem;
+  opacity: 0.45;
+}
+
+.circular__mailing-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-xs);
+}
+
+/* "Postal Customer" block — no named recipient */
+.circular__postal-customer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  opacity: 0.75;
+  line-height: 1.5;
+}
+
+/* Permit block inside mailing zone — override absolute */
+.circular__mailing-right .permit-block {
+  position: relative;
+  top: auto; right: auto;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   39. JUROR SUMMONS (tri-fold self-mailer)
+   Government seal, OPEN IMMEDIATELY exterior, questionnaire + sig line.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.summons {
+  width: 420px;
+  border-radius: 1px;
+  overflow: hidden;
+  background-color: var(--color-paper-white);
+}
+
+/* Exterior — the folded-shut face shown on the desk */
+.summons__exterior {
+  position: relative;
+  padding: var(--space-lg) var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  background-color: var(--color-paper-white);
+  border: 1px solid rgba(80,55,30,0.15);
+}
+
+.summons__seal-block {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-xs);
+}
+
+.summons__seal {
+  width: 64px;
+  height: 64px;
+  display: block;
+}
+
+.summons__urgent-label {
+  font-family: var(--font-logo);
+  font-size: 1.0rem;
+  letter-spacing: 0.10em;
+  text-align: center;
+  color: var(--color-ink-black);
+}
+
+.summons__open-notice {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--color-stamp-red);
+  border: 1.5px solid var(--color-stamp-red);
+  padding: 3px var(--space-sm);
+  align-self: center;
+}
+
+.summons__penalty-note {
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  text-align: center;
+  opacity: 0.55;
+  line-height: 1.55;
+}
+
+.summons__address-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px solid rgba(80,55,30,0.12);
+  position: relative;
+}
+
+.summons__recipient {
+  font-size: 0.72rem;
+}
+
+/* Perforated glue-seal edges */
+.summons__perf-edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(80,55,30,0.20) 0px, rgba(80,55,30,0.20) 3px,
+    transparent 3px, transparent 7px
+  );
+  pointer-events: none;
+}
+
+.summons__perf-edge--top    { top: 0; }
+.summons__perf-edge--bottom { bottom: 0; }
+
+/* Interior — full 8.5×14 unfolded document */
+.summons__interior {
+  display: none;  /* shown in overlay */
+  padding: var(--space-xl);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  line-height: 1.7;
+  background-color: var(--color-paper-white);
+}
+
+.summons__interior-header {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+
+.summons__court-name {
+  font-family: var(--font-logo);
+  font-size: 0.88rem;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+}
+
+.summons__interior-sub {
+  font-size: 0.62rem;
+  opacity: 0.55;
+  margin-top: 2px;
+}
+
+/* Details grid */
+.summons__details-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid rgba(80,55,30,0.20);
+  margin-bottom: var(--space-lg);
+}
+
+.summons__detail-row {
+  display: flex;
+  border-bottom: 1px solid rgba(80,55,30,0.10);
+  padding: 4px var(--space-sm);
+}
+
+.summons__detail-row:last-child { border-bottom: none; }
+
+.summons__detail-label {
+  min-width: 160px;
+  font-weight: 700;
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  flex-shrink: 0;
+}
+
+.summons__detail-value {
+  font-size: 0.72rem;
+}
+
+.summons__instructions {
+  font-size: 0.68rem;
+  line-height: 1.65;
+  opacity: 0.80;
+  margin-bottom: var(--space-lg);
+}
+
+.summons__instructions p + p { margin-top: var(--space-xs); }
+
+/* Tear line between main notice and questionnaire */
+.summons__tear-line {
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  letter-spacing: 0.10em;
+  color: rgba(80,55,30,0.45);
+  border-top: 1px dashed rgba(80,55,30,0.30);
+  padding-top: 4px;
+  margin: var(--space-lg) 0 var(--space-md);
+}
+
+/* Questionnaire section */
+.summons__questionnaire {
+  border: 1px solid rgba(80,55,30,0.20);
+  padding: var(--space-md) var(--space-lg);
+}
+
+.summons__q-header {
+  font-weight: 700;
+  font-size: 0.62rem;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  border-bottom: 1.5px solid rgba(80,55,30,0.20);
+  padding-bottom: var(--space-xs);
+  margin-bottom: var(--space-sm);
+}
+
+.summons__q-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: var(--space-md);
+}
+
+.summons__q-row {
+  display: flex;
+  gap: var(--space-sm);
+  border-bottom: 1px solid rgba(80,55,30,0.08);
+  padding: 3px 0;
+  align-items: baseline;
+}
+
+.summons__q-label {
+  min-width: 220px;
+  font-size: 0.65rem;
+  opacity: 0.65;
+  flex-shrink: 0;
+}
+
+.summons__q-field {
+  font-size: 0.70rem;
+  flex: 1;
+}
+
+.summons__q-field--blank {
+  opacity: 0.35;
+  letter-spacing: 0.04em;
+}
+
+/* Signature block */
+.summons__sig-block {
+  border-top: 1.5px solid rgba(80,55,30,0.20);
+  padding-top: var(--space-sm);
+  margin-top: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.summons__sig-notice {
+  font-size: 0.60rem;
+  opacity: 0.60;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.summons__sig-row {
+  display: flex;
+  gap: var(--space-lg);
+  align-items: baseline;
+}
+
+.summons__sig-label {
+  font-size: 0.62rem;
+  opacity: 0.60;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.summons__sig-line {
+  font-size: 0.75rem;
+  flex: 1;
+  border-bottom: 1px solid rgba(80,55,30,0.25);
+  padding-bottom: 2px;
+}
+
+.summons__q-footer {
+  font-size: 0.55rem;
+  opacity: 0.45;
+  margin-top: var(--space-sm);
+  text-align: center;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   40. CHARITY ENVELOPE (window, address labels, donation slip)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.envelope--charity {
+  width: 440px;
+  height: 182px;
+}
+
+/* Otter icon + emotional copy on exterior */
+.charity-exterior {
+  position: absolute;
+  bottom: 32px;
+  left: var(--space-md);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.charity-exterior__icon {
+  width: 32px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.charity-exterior__copy {
+  font-family: var(--font-print);
+  font-style: italic;
+  font-size: 0.68rem;
+  line-height: 1.4;
+  color: var(--color-ink-black);
+  opacity: 0.80;
+}
+
+/* Window showing address labels */
+.envelope-window {
+  position: absolute;
+  left: 60px;
+  bottom: 26px;
+  width: 190px;
+  height: 54px;
+  background: rgba(200,220,240,0.18);
+  border: 1px solid rgba(80,55,30,0.22);
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+}
+
+.envelope-window__label-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.envelope-window__label-name {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.envelope-window__label-addr,
+.envelope-window__label-city {
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  opacity: 0.75;
+}
+
+/* Address labels sheet inside */
+.charity-labels {
+  background-color: var(--color-paper-white);
+  padding: var(--space-md);
+  font-family: var(--font-body);
+}
+
+.charity-labels__header {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin-bottom: var(--space-sm);
+}
+
+.charity-labels__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.charity-label {
+  border: 1px dashed rgba(80,55,30,0.25);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-paper-white);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.charity-label__otter {
+  width: 28px;
+  height: 20px;
+  margin-bottom: 2px;
+}
+
+.charity-label__name {
+  font-size: 0.60rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.charity-label__addr,
+.charity-label__city {
+  font-size: 0.56rem;
+  opacity: 0.70;
+  line-height: 1.3;
+}
+
+.charity-labels__note {
+  font-family: var(--font-print);
+  font-style: italic;
+  font-size: 0.60rem;
+  opacity: 0.55;
+}
+
+/* Charity appeal letter */
+.charity-letter {
+  font-family: var(--font-print);
+  font-size: 0.72rem;
+  line-height: 1.75;
+  padding: var(--space-xl);
+  max-width: 560px;
+}
+
+.charity-letter__logo {
+  margin-bottom: var(--space-sm);
+}
+
+.charity-letter__addr,
+.charity-letter__date {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  opacity: 0.55;
+}
+
+.charity-letter__date { margin: var(--space-sm) 0; display: block; }
+
+.charity-letter__salutation {
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+  display: block;
+}
+
+.charity-letter p { margin-bottom: var(--space-sm); }
+
+.charity-letter__sig-block {
+  margin-top: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--font-body);
+  font-size: 0.70rem;
+}
+
+.charity-letter__sig {
+  font-family: var(--font-handwritten);
+  font-size: 1.3rem;
+  line-height: 1;
+  transform: rotate(-2deg);
+  display: inline-block;
+  margin-bottom: 2px;
+}
+
+.charity-letter__ps {
+  font-size: 0.68rem;
+  opacity: 0.75;
+  margin-top: var(--space-md);
+  font-style: italic;
+}
+
+/* Donation slip */
+.donation-slip {
+  border: 1.5px solid rgba(108, 52, 131, 0.40); /* cancellation purple hint */
+  padding: var(--space-md) var(--space-lg);
+  margin: var(--space-md) var(--space-xl);
+  font-family: var(--font-body);
+  font-size: 0.70rem;
+}
+
+.donation-slip__header {
+  font-weight: 700;
+  font-size: 0.65rem;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: #6B8E4E;
+  border-bottom: 1px solid rgba(107,142,78,0.25);
+  padding-bottom: var(--space-xs);
+  margin-bottom: var(--space-sm);
+}
+
+.donation-slip__name {
+  font-size: 0.70rem;
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+}
+
+.donation-slip__amounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+
+.donation-slip__option {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  cursor: default;
+}
+
+.donation-slip__blank {
+  font-size: 0.68rem;
+  opacity: 0.40;
+  letter-spacing: 0.06em;
+}
+
+.donation-slip__payment {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 0.62rem;
+  margin-bottom: var(--space-sm);
+}
+
+.donation-slip__cc-field {
+  opacity: 0.55;
+  font-size: 0.60rem;
+  padding-left: var(--space-lg);
+}
+
+.donation-slip__sig-row {
+  display: flex;
+  gap: var(--space-lg);
+  border-top: 1px solid rgba(80,55,30,0.15);
+  padding-top: var(--space-xs);
+  font-size: 0.65rem;
+}
+
+.donation-slip__note {
+  font-size: 0.54px;
+  opacity: 0.45;
+  margin-top: var(--space-xs);
+  line-height: 1.5;
+  font-size: 0.54rem;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   41. VALPAK COUPON ENVELOPE
+   Long bright blue envelope, corporate branding, clear window,
+   PRSRT MKTG permit, loose coupon slips inside.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.valpak {
+  width: 460px;
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.valpak__exterior {
+  position: relative;
+  height: 168px;
+  background-color: #1565C0;  /* ValPak blue */
+  background-image:
+    repeating-linear-gradient(
+      90deg, transparent 0px, transparent 18px,
+      rgba(255,255,255,0.025) 18px, rgba(255,255,255,0.025) 19px
+    );
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-sm) var(--space-md);
+  gap: var(--space-xs);
+  overflow: hidden;
+}
+
+.valpak__brand-band {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+}
+
+.valpak__brand-name {
+  font-family: var(--font-logo);
+  font-size: 1.4rem;
+  color: #FFD700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.valpak__brand-sub {
+  font-family: var(--font-body);
+  font-size: 0.60rem;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.65);
+  text-transform: uppercase;
+}
+
+.valpak__promo {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.valpak__promo-line {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: white;
+}
+
+.valpak__promo-line--sub {
+  font-size: 0.58rem;
+  font-weight: 400;
+  opacity: 0.70;
+}
+
+/* Clear window — shows top coupon / address */
+.valpak__window {
+  position: absolute;
+  bottom: 28px;
+  left: 60px;
+  width: 200px;
+  height: 50px;
+  background: rgba(230,240,255,0.22);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+}
+
+.valpak__window-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.valpak__address {
+  font-size: 0.65rem;
+  color: white;
+}
+
+.valpak__postal-customer {
+  font-family: var(--font-body);
+  font-size: 0.70rem;
+  font-weight: 700;
+  color: white;
+}
+
+/* Permit inside envelope exterior */
+.valpak__exterior .permit-block {
+  top: var(--space-sm);
+  right: var(--space-sm);
+}
+
+/* Bottom barcode */
+.valpak__exterior .barcode--bottom {
+  position: absolute;
+  bottom: 4px;
+  left: var(--space-md);
+  right: var(--space-md);
+  height: 12px;
+}
+
+/* Coupon insert slips */
+.valpak__inserts {
+  background-color: var(--color-paper-white);
+  padding: var(--space-md);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+}
+
+.valpak__coupon {
+  border: 1px solid rgba(80,55,30,0.20);
+  padding: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  position: relative;
+  background-color: var(--color-paper-white);
+  font-family: var(--font-body);
+  overflow: hidden;
+}
+
+.valpak__coupon-biz {
+  font-family: var(--font-logo);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--color-ink-black);
+  line-height: 1.2;
+}
+
+.valpak__coupon-offer {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-stamp-red);
+}
+
+.valpak__coupon-detail {
+  font-size: 0.58rem;
+  font-weight: 400;
+  color: var(--color-ink-black);
+  opacity: 0.70;
+}
+
+.valpak__coupon-addr {
+  font-size: 0.56rem;
+  opacity: 0.55;
+  line-height: 1.4;
+  margin-top: auto;
+}
+
+.valpak__coupon-exp {
+  font-size: 0.50rem;
+  opacity: 0.40;
+  line-height: 1.4;
+}
+
+.valpak__coupon-art {
+  position: absolute;
+  bottom: var(--space-xs);
+  right: var(--space-xs);
+  width: 44px;
+  height: 44px;
+  opacity: 0.55;
+}
+
+/* Coupon color variants */
+.valpak__coupon--pizza   { border-top: 3px solid var(--color-stamp-red); }
+.valpak__coupon--carwash { border-top: 3px solid var(--color-stamp-blue); }
+.valpak__coupon--dryclean { border-top: 3px solid var(--color-cancellation-purple); }
+.valpak__coupon--chinese { border-top: 3px solid #D4A017; }
+.valpak__coupon--furniture { grid-column: span 2; border-top: 3px solid var(--color-usps-blue); }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   42. WEDDING INVITATION (heavy textured envelope + invite + RSVP)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.envelope--wedding {
+  width: 380px;
+  height: 280px;
+}
+
+/* Textured ivory envelope surface */
+.envelope-back--textured,
+.envelope-front--textured {
+  background-color: #F5F0E0;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent 0px, transparent 3px,
+      rgba(200,185,150,0.06) 3px, rgba(200,185,150,0.06) 4px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent 0px, transparent 3px,
+      rgba(200,185,150,0.04) 3px, rgba(200,185,150,0.04) 4px
+    );
+}
+
+/* Wax seal on back */
+.envelope-back__wax-seal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 28px;
+  height: 28px;
+  filter: drop-shadow(0 1px 3px rgba(80,55,30,0.30));
+}
+
+/* Pointed flap (vs. torn) */
+.envelope-flap--pointed {
+  clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+}
+
+/* Recipient address centered on envelope face */
+.envelope__recipient--centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+/* Invitation card */
+.wedding-invite {
+  background-color: var(--color-paper-white);
+  padding: var(--space-xl) var(--space-xl) var(--space-lg);
+  max-width: 480px;
+  text-align: center;
+  margin: 0 auto;
+  font-family: var(--font-print);
+  position: relative;
+}
+
+.wedding-invite__border {
+  border-top: 1px solid rgba(80,55,30,0.20);
+  margin-bottom: var(--space-lg);
+}
+
+.wedding-invite__border--bottom {
+  border-top: none;
+  border-bottom: 1px solid rgba(80,55,30,0.20);
+  margin-top: var(--space-lg);
+  margin-bottom: 0;
+}
+
+.wedding-invite__preamble {
+  font-style: italic;
+  font-size: 0.72rem;
+  opacity: 0.65;
+  margin-bottom: var(--space-sm);
+}
+
+.wedding-invite__names {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+
+.wedding-invite__name {
+  font-family: var(--font-handwritten);
+  font-size: 1.6rem;
+  line-height: 1.2;
+  color: var(--color-ink-black);
+}
+
+.wedding-invite__and {
+  font-family: var(--font-print);
+  font-style: italic;
+  font-size: 0.88rem;
+  opacity: 0.60;
+}
+
+.wedding-invite__request {
+  font-style: italic;
+  font-size: 0.75rem;
+  line-height: 1.65;
+  opacity: 0.80;
+  margin-bottom: var(--space-md);
+}
+
+.wedding-invite__details {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: var(--space-md);
+}
+
+.wedding-invite__date,
+.wedding-invite__year {
+  font-family: var(--font-logo);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+}
+
+.wedding-invite__time {
+  font-style: italic;
+  font-size: 0.72rem;
+  opacity: 0.70;
+}
+
+.wedding-invite__venue {
+  margin-bottom: var(--space-sm);
+}
+
+.wedding-invite__venue-name {
+  font-family: var(--font-logo);
+  font-size: 0.88rem;
+  letter-spacing: 0.08em;
+}
+
+.wedding-invite__venue-addr {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  opacity: 0.55;
+  margin-top: 2px;
+}
+
+.wedding-invite__reception {
+  font-style: italic;
+  font-size: 0.68rem;
+  opacity: 0.60;
+}
+
+/* RSVP card */
+.rsvp-card {
+  background-color: var(--color-aged-paper);
+  padding: var(--space-md) var(--space-lg);
+  margin: var(--space-md) auto;
+  max-width: 320px;
+  font-family: var(--font-body);
+  font-size: 0.70rem;
+  border: 1px solid rgba(80,55,30,0.15);
+}
+
+.rsvp-card__header {
+  font-family: var(--font-print);
+  font-style: italic;
+  font-size: 0.70rem;
+  text-align: center;
+  opacity: 0.65;
+  margin-bottom: var(--space-md);
+  border-bottom: 1px solid rgba(80,55,30,0.12);
+  padding-bottom: var(--space-xs);
+}
+
+.rsvp-card__name-line {
+  font-size: 0.72rem;
+  border-bottom: 1px solid rgba(80,55,30,0.22);
+  padding-bottom: 3px;
+  margin-bottom: var(--space-sm);
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+}
+
+.rsvp-card__name-blank {
+  flex: 1;
+  font-size: 0.55rem;
+  opacity: 0.30;
+  letter-spacing: 0.04em;
+  overflow: hidden;
+}
+
+.rsvp-card__accepts,
+.rsvp-card__meal,
+.rsvp-card__guests {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.65rem;
+  margin-bottom: var(--space-sm);
+}
+
+.rsvp-card__meal,
+.rsvp-card__guests {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.rsvp-card__blank {
+  font-size: 0.65rem;
+  opacity: 0.35;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid rgba(80,55,30,0.20);
+  display: inline-block;
+  min-width: 30px;
+}
+
+/* Stamp inside RSVP return envelope */
+.stamp--rsvp {
+  width: 36px;
+  height: 44px;
+  top: var(--space-xs);
+  right: var(--space-xs);
+  transform: rotate(0.8deg);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   43. CAMPAIGN MAILER (oversized glossy cardstock, bare)
+   Full-bleed candidate photo front, grayscale attack panel back,
+   mailing zone right half, Presorted Standard permit.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.campaign-mailer {
+  width: 560px;
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Front face — candidate, patriotic color block */
+.campaign-mailer__front {
+  display: flex;
+  flex-direction: column;
+  background-color: #004B87;  /* USPS blue — patriotic default */
+  min-height: 240px;
+}
+
+.campaign-mailer__photo-block {
+  position: relative;
+  flex: 1;
+  min-height: 160px;
+}
+
+.img-frame--campaign {
+  width: 100%;
+  height: 160px;
+}
+
+/* Name overlay on photo */
+.campaign-mailer__name-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.campaign-mailer__candidate {
+  font-family: var(--font-logo);
+  font-size: 1.4rem;
+  color: white;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+.campaign-mailer__office {
+  font-family: var(--font-body);
+  font-size: 0.60rem;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.75);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* Tag line block */
+.campaign-mailer__tagline-block {
+  background-color: #C0392B;  /* stamp red — contrast band */
+  padding: var(--space-xs) var(--space-md);
+}
+
+.campaign-mailer__tagline {
+  font-family: var(--font-print);
+  font-style: italic;
+  font-size: 0.88rem;
+  color: white;
+  letter-spacing: 0.02em;
+}
+
+/* Platform points list */
+.campaign-mailer__platform {
+  background-color: white;
+  padding: var(--space-sm) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.campaign-mailer__platform-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  line-height: 1.5;
+  color: var(--color-ink-black);
+}
+
+.campaign-mailer__checkmark {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Bottom disclaimer bar */
+.campaign-mailer__bottom-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px var(--space-md);
+  background-color: #004B87;
+  font-family: var(--font-body);
+  font-size: 0.50rem;
+  color: rgba(255,255,255,0.60);
+  letter-spacing: 0.04em;
+}
+
+/* Back face — attack panel + mailing zone */
+.campaign-mailer__back {
+  display: flex;
+  min-height: 200px;
+  background-color: var(--color-paper-white);
+}
+
+/* Left: attack panel — grayscale treatment via CSS filter on img */
+.campaign-mailer__attack-panel {
+  flex: 1;
+  padding: var(--space-md) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  border-right: 2px solid rgba(80,55,30,0.10);
+  background-color: #F8F8F8;
+}
+
+.campaign-mailer__attack-headline {
+  font-family: var(--font-logo);
+  font-size: 0.88rem;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+  color: var(--color-ink-black);
+}
+
+.campaign-mailer__opponent-photo {
+  width: 100%;
+}
+
+.img-frame--opponent {
+  width: 100%;
+  height: 100px;
+}
+
+.campaign-mailer__attack-sub {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  line-height: 1.6;
+  opacity: 0.70;
+}
+
+.campaign-mailer__attack-source {
+  font-family: var(--font-body);
+  font-size: 0.52rem;
+  opacity: 0.40;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* Call to action box */
+.campaign-mailer__cta {
+  background-color: var(--color-stamp-red);
+  padding: var(--space-sm) var(--space-md);
+  margin-top: auto;
+  border-radius: 2px;
+}
+
+.campaign-mailer__cta-headline {
+  font-family: var(--font-logo);
+  font-size: 0.88rem;
+  color: white;
+  letter-spacing: 0.06em;
+}
+
+.campaign-mailer__cta-phone {
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  color: rgba(255,255,255,0.75);
+  margin-top: 2px;
+}
+
+/* Right: mailing zone */
+.campaign-mailer__mailing-zone {
+  width: 200px;
+  flex-shrink: 0;
+  padding: var(--space-md) var(--space-sm) var(--space-sm) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  position: relative;
+}
+
+.campaign-mailer__recipient {
+  font-size: 0.70rem;
+  margin-top: var(--space-sm);
+}
+
+.campaign-mailer__return {
+  font-family: var(--font-body);
+  font-size: 0.50rem;
+  opacity: 0.40;
+  line-height: 1.6;
+  margin-top: auto;
+}
+
+/* Mailing zone permit block — override to position inside column */
+.campaign-mailer__mailing-zone .permit-block {
+  position: relative;
+  top: auto; right: auto;
+  align-self: flex-end;
+}
+
+/* Mailing zone postmark */
+.postmark--mailer {
+  position: relative;
+  top: auto; right: auto;
+  width: 80px;
+  height: 36px;
+}
+
+/* Intelligent Mail Barcode — taller alternating bars */
+.barcode--imb {
+  height: 18px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   44. PIECE-SPECIFIC ID OVERRIDES
+   Shadow / sizing corrections that can't be handled by class alone.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* CD sleeve — square piece */
+#mailer-aol-01 { border-radius: 3px; overflow: hidden; }
+
+/* Kraft mailer — wide, heavy */
+#mailer-columbia-01 { border-radius: 3px; overflow: hidden; }
+
+/* Grocery circular — widest piece, lower z so it reads as background layer */
+#circular-grocery-01 {
+  box-shadow:
+    2px 3px 6px  rgba(80, 55, 30, 0.22),
+    1px 1px 2px  rgba(80, 55, 30, 0.12) !important;
+}
+
+/* Summons — stark white, no aged paper warmth */
+#summons-court-01 .summons__exterior {
+  background-color: var(--color-paper-white);
+}
+
+/* Wedding invite — warmer shadow to match ivory paper */
+#card-wedding-01 {
+  box-shadow:
+    3px 5px 10px rgba(80, 55, 30, 0.30),
+    1px 2px 4px  rgba(80, 55, 30, 0.18),
+    inset 0 0 0 1px rgba(255, 245, 220, 0.50) !important;
+}
+
+/* Campaign mailer — heaviest piece, deepest shadow */
+#mailer-campaign-01 {
+  box-shadow:
+    4px 6px 14px rgba(80, 55, 30, 0.42),
+    2px 3px 6px  rgba(80, 55, 30, 0.22),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.25) !important;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   45. FRAGMENT-LOCAL CLASSES
+   Replaces all inline style= attributes on mail fragment HTML files.
+   Organised by fragment type. No inline style= should remain in any
+   .mail-piece fragment after these rules are applied.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Envelope-window & barcode in FLOW context (mailers) ────────────────── */
+/* The base .envelope-window rule (§11) uses position:absolute for envelopes.
+   Mailer fragments need a flow-positioned variant.                           */
+.envelope-window--flow {
+  position: relative;
+  bottom: auto;
+  left: auto;
+  width: auto;
+  height: auto;
+}
+
+.barcode--flow {
+  position: relative;
+  bottom: auto;
+  left: auto;
+  right: auto;
+}
+
+/* ── Clipping: shared masthead row ─────────────────────────────────────── */
+.clipping__masthead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.clipping__masthead-name {
+  font-family: var(--font-logo);
+  letter-spacing: 0.05em;
+  font-size: 0.72rem;
+}
+
+.clipping__masthead-section {
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  opacity: 0.55;
+}
+
+/* ── Clipping: Classifieds ─────────────────────────────────────────────── */
+.clipping-classifieds {
+  width: 220px;
+  background: var(--color-aged-paper);
+  font-family: var(--font-print);
+}
+
+.clipping-classifieds__head {
+  padding: 5px 10px 4px;
+  border-bottom: 2px solid var(--color-ink-black);
+}
+
+.clipping-classifieds__head .clipping__masthead-name { font-size: 0.72rem; letter-spacing: 0.05em; }
+.clipping-classifieds__head .clipping__masthead-section { font-size: 0.58rem; }
+
+.clipping-classifieds__body {
+  padding: 8px 10px;
+  font-size: 0.64rem;
+  font-family: var(--font-print);
+  line-height: 1.6;
+  color: var(--color-ink-black);
+}
+
+.clipping-classifieds__section-head {
+  font-family: var(--font-print);
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+  border-bottom: 1px solid rgba(80,55,30,0.25);
+  padding-bottom: 3px;
+}
+
+.clipping-classifieds__ad {
+  margin-bottom: 6px;
+}
+
+/* ── Clipping: Dispatch ─────────────────────────────────────────────────── */
+.clipping-dispatch {
+  width: 280px;
+  background: var(--color-aged-paper);
+  font-family: var(--font-print);
+}
+
+.clipping-dispatch__stripe {
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-aged-paper) 0,
+    var(--color-aged-paper) 18px,
+    var(--color-manila) 18px,
+    var(--color-manila) 19px
+  );
+}
+
+.clipping-dispatch__stripe--flip {
+  height: 5px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-aged-paper) 0,
+    var(--color-aged-paper) 18px,
+    var(--color-manila) 18px,
+    var(--color-manila) 19px
+  );
+  transform: scaleY(-1);
+}
+
+.clipping-dispatch__head {
+  padding: 6px 12px 4px;
+  border-bottom: 2px solid var(--color-ink-black);
+}
+
+.clipping-dispatch__head .clipping__masthead-name { font-size: 0.78rem; letter-spacing: 0.06em; }
+.clipping-dispatch__head .clipping__masthead-section { font-size: 0.6rem; opacity: 0.6; }
+
+.clipping-dispatch__body {
+  padding: 8px 12px;
+}
+
+.clipping-dispatch__headline {
+  font-family: var(--font-print);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 4px;
+}
+
+.clipping-dispatch__byline {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  opacity: 0.55;
+  margin-bottom: 6px;
+}
+
+.clipping-dispatch__text {
+  font-family: var(--font-print);
+  font-size: 0.68rem;
+  line-height: 1.65;
+  color: var(--color-ink-black);
+}
+
+/* ── Clipping: Lifestyle ────────────────────────────────────────────────── */
+.clipping-lifestyle {
+  width: 240px;
+  background: var(--color-paper-white);
+  font-family: var(--font-print);
+}
+
+.clipping-lifestyle__head {
+  padding: 5px 10px 4px;
+  border-bottom: 1px solid rgba(80,55,30,0.2);
+}
+
+.clipping-lifestyle__head .clipping__masthead-name { font-size: 0.7rem; letter-spacing: 0.06em; }
+.clipping-lifestyle__head .clipping__masthead-section { font-size: 0.58rem; opacity: 0.5; }
+
+.clipping-lifestyle__body { padding: 8px 10px; }
+
+.clipping-lifestyle__headline {
+  font-family: var(--font-print);
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 5px;
+}
+
+.clipping-lifestyle__subhead {
+  font-family: var(--font-print);
+  font-style: italic;
+  font-size: 0.62rem;
+  opacity: 0.6;
+  margin-bottom: 6px;
+}
+
+.clipping-lifestyle__text {
+  font-family: var(--font-print);
+  font-size: 0.66rem;
+  line-height: 1.7;
+}
+
+/* ── Clipping: Newsletter ───────────────────────────────────────────────── */
+.clipping-newsletter {
+  width: 260px;
+  background: var(--color-aged-paper);
+  font-family: var(--font-print);
+}
+
+.clipping-newsletter__masthead {
+  padding: 7px 12px;
+  border-bottom: 3px double var(--color-ink-black);
+  text-align: center;
+}
+
+.clipping-newsletter__name {
+  font-family: var(--font-logo);
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+}
+
+.clipping-newsletter__tagline {
+  font-family: var(--font-body);
+  font-size: 0.56rem;
+  opacity: 0.55;
+  margin-top: 2px;
+  letter-spacing: 0.05em;
+}
+
+.clipping-newsletter__columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  padding: 0;
+}
+
+.clipping-newsletter__col {
+  padding: 8px 10px 8px 12px;
+  font-size: 0.63rem;
+  line-height: 1.7;
+}
+
+.clipping-newsletter__col--right {
+  padding: 8px 12px 8px 10px;
+  border-left: 1px solid rgba(80,55,30,0.2);
+}
+
+.clipping-newsletter__col-head {
+  font-weight: 700;
+  font-size: 0.68rem;
+  margin-bottom: 4px;
+  border-bottom: 1px solid rgba(80,55,30,0.15);
+  padding-bottom: 3px;
+}
+
+.clipping-newsletter__footer {
+  border-top: 1px solid rgba(80,55,30,0.2);
+  padding: 4px 12px;
+  font-family: var(--font-body);
+  font-size: 0.56rem;
+  opacity: 0.45;
+  text-align: center;
+}
+
+/* ── Clipping: Recipe card ──────────────────────────────────────────────── */
+.clipping-recipe {
+  width: 200px;
+  background: #fff8e8;
+  border: 2px solid #c8a860;
+  font-family: var(--font-body);
+}
+
+.clipping-recipe__head {
+  padding: 10px 14px 6px;
+  border-bottom: 2px solid #c8a860;
+}
+
+.clipping-recipe__label {
+  font-family: var(--font-print);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.clipping-recipe__body {
+  padding: 8px 14px 12px;
+}
+
+.clipping-recipe__dish {
+  font-family: var(--font-handwritten);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #8B4A1A;
+  margin-bottom: 8px;
+}
+
+.clipping-recipe__text {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  line-height: 1.75;
+  color: var(--color-ink-black);
+}
+
+.clipping-recipe__attribution {
+  margin-top: 10px;
+  font-family: var(--font-handwritten);
+  font-size: 0.65rem;
+  opacity: 0.5;
+}
+
+/* ── Note: About ────────────────────────────────────────────────────────── */
+.note-about {
+  width: 200px;
+  background: var(--color-paper-white);
+  border: 1px solid rgba(80,55,30,0.18);
+  font-family: var(--font-handwritten);
+}
+
+.note-about__header {
+  background: var(--color-usps-blue);
+  padding: 7px 14px;
+}
+
+.note-about__title {
+  font-family: var(--font-logo);
+  font-size: 0.7rem;
+  color: white;
+  letter-spacing: 0.1em;
+}
+
+.note-about__body {
+  padding: 12px 14px;
+  font-size: 0.78rem;
+  line-height: 1.75;
+  color: var(--color-ink-black);
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent, transparent 22px,
+    rgba(80,55,30,0.06) 22px,
+    rgba(80,55,30,0.06) 23px
+  );
+}
+
+.note-about__p + .note-about__p { margin-top: 8px; }
+
+.note-about__p--small {
+  margin-top: 8px;
+  font-size: 0.7rem;
+  opacity: 0.55;
+}
+
+/* ── Note: PS sticky ────────────────────────────────────────────────────── */
+.note-ps {
+  width: 170px;
+  background: #f8f0c8;
+  border: 1px solid #d4c860;
+  position: relative;          /* needed for corner-shadow pseudo-child */
+}
+
+.note-ps__fold {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: linear-gradient(180deg, transparent, rgba(80,55,30,0.05));
+  pointer-events: none;
+}
+
+.note-ps__body {
+  padding: 14px;
+  font-family: var(--font-handwritten);
+  font-size: 0.78rem;
+  line-height: 1.65;
+  color: #3a2a0a;
+  min-height: 100px;
+}
+
+.note-ps__title { font-size: 0.9rem; }
+
+/* ── Note: Reminders (ruled notepad) ───────────────────────────────────── */
+.note-reminders {
+  width: 160px;
+  background: #fff8d8;
+  border: 1px solid #d4b860;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent, transparent 18px,
+    rgba(100,140,200,0.18) 18px,
+    rgba(100,140,200,0.18) 19px
+  );
+  position: relative;
+  min-height: 130px;
+}
+
+.note-reminders__margin {
+  position: absolute;
+  top: 0;
+  left: 24px;
+  width: 1px;
+  height: 100%;
+  background: rgba(200,80,80,0.22);
+  pointer-events: none;
+}
+
+.note-reminders__body {
+  padding: 10px 10px 10px 28px;
+  font-family: var(--font-handwritten);
+  font-size: 0.82rem;
+  line-height: 1.58;
+  color: var(--color-ink-black);
+}
+
+/* ── Objects: shared wrapper when sized by inline SVG ───────────────────── */
+/* SVG objects set their own width/height on the <svg> element; the wrapper
+   just needs position:relative for any future overlay children.             */
+.obj-wrapper { position: relative; }
+
+/* ── Objects: Airmail label ─────────────────────────────────────────────── */
+.obj-airmail-label {
+  width: 130px;
+  height: 40px;
+  position: relative;
+}
+
+/* ── Objects: Letter opener ─────────────────────────────────────────────── */
+.obj-letter-opener {
+  width: 24px;
+  height: 220px;
+  position: relative;
+}
+
+/* ── Objects: Pen ───────────────────────────────────────────────────────── */
+.obj-pen {
+  width: 28px;
+  height: 180px;
+  position: relative;
+}
+
+/* ── Objects: Pencil ────────────────────────────────────────────────────── */
+.obj-pencil {
+  width: 22px;
+  height: 200px;
+  position: relative;
+}
+
+/* ── Objects: Postmark deco ─────────────────────────────────────────────── */
+.obj-postmark-deco {
+  width: 120px;
+  height: 120px;
+  position: relative;
+  opacity: 0.35;
+}
+
+/* ── Objects: Return label sheet ────────────────────────────────────────── */
+.obj-return-labels {
+  width: 160px;
+  position: relative;
+  font-family: var(--font-body);
+}
+
+.obj-return-labels__sheet {
+  background: #f0ede8;
+  border: 1px solid #c8bba0;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.obj-return-labels__label {
+  background: white;
+  border: 1px solid #d4cbb4;
+  padding: 4px 8px;
+  font-size: 0.58rem;
+  line-height: 1.5;
+  color: var(--color-ink-black);
+}
+
+.obj-return-labels__name { font-weight: 700; }
+
+/* ── Objects: Stamp eagle ───────────────────────────────────────────────── */
+.obj-stamp-eagle {
+  width: 110px;
+  height: 130px;
+  position: relative;
+}
+
+/* ── Objects: Stamp strip ───────────────────────────────────────────────── */
+.obj-stamp-strip {
+  width: 220px;
+  height: 72px;
+  position: relative;
+}
+
+/* ── Objects: Wax seal ──────────────────────────────────────────────────── */
+.obj-wax-seal {
+  width: 70px;
+  height: 70px;
+  position: relative;
+}
+
+/* ── Letter: found / personal — lined paper sections ───────────────────── */
+.letter-section {
+  padding: 14px 16px 0;
+  border-bottom: 1px solid rgba(80,55,30,0.12);
+  min-height: 90px;
+  position: relative;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent, transparent 22px,
+    rgba(80,55,30,0.07) 22px,
+    rgba(80,55,30,0.07) 23px
+  );
+}
+
+.letter-section--mid {
+  padding: 8px 16px;
+  min-height: 90px;
+}
+
+.letter-section--final {
+  padding: 8px 16px 14px;
+  min-height: 70px;
+}
+
+.letter-section--tall {
+  padding: 10px 16px 0;
+  min-height: 130px;
+}
+
+.letter-section--mid-tall {
+  padding: 8px 16px;
+  min-height: 80px;
+}
+
+.letter-section--close {
+  padding: 12px 16px;
+}
+
+.letter__rule {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(80,55,30,0.18), transparent);
+}
+
+.letter__rule--light {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(80,55,30,0.15), transparent);
+}
+
+.letter__line-offset { height: 1px; }
+.letter__line-offset--tall { height: 2px; }
+
+.letter__date {
+  text-align: right;
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  opacity: 0.55;
+  margin-bottom: 8px;
+}
+
+.letter__salutation-bold {
+  font-family: var(--font-handwritten);
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.letter__handwritten {
+  font-family: var(--font-handwritten);
+  font-size: 0.78rem;
+  line-height: 1.75;
+}
+
+.letter__handwritten + .letter__handwritten { margin-top: 6px; }
+
+/* ── Photo: Polaroid ────────────────────────────────────────────────────── */
+.photo-polaroid {
+  background: white;
+  padding: 10px 10px 30px;
+  border: 1px solid var(--color-manila);
+  font-family: var(--font-handwritten);
+}
+
+.photo-polaroid--wide {
+  width: 200px;
+}
+
+.photo-polaroid--narrow {
+  width: 170px;
+  padding-bottom: 36px;
+}
+
+.photo-polaroid .img-frame {
+  height: 160px;
+}
+
+.photo-polaroid__caption {
+  margin-top: 10px;
+  font-size: 0.72rem;
+  color: #6A4A2A;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* ── Greeting card: seasonal ────────────────────────────────────────────── */
+.greeting-card-seasonal {
+  width: 200px;
+  background: var(--color-paper-white);
+  border: 1px solid var(--color-manila);
+  font-family: var(--font-handwritten);
+}
+
+.greeting-card-seasonal__front {
+  padding: 18px 14px 16px;
+  border-bottom: 1px solid rgba(80,55,30,0.14);
+  text-align: center;
+}
+
+.greeting-card-seasonal__front-motif {
+  display: block;
+  margin: 0 auto 10px;
+}
+
+.greeting-card-seasonal__front-text {
+  font-family: var(--font-logo);
+  font-size: 1.1rem;
+  color: var(--color-ink-black);
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+}
+
+.greeting-card-seasonal__inside {
+  padding: 14px 16px;
+}
+
+.greeting-card-seasonal__message {
+  font-size: 0.8rem;
+  line-height: 1.75;
+  color: var(--color-ink-black);
+}
+
+.greeting-card-seasonal__closing {
+  margin-top: 10px;
+  font-size: 0.85rem;
+}
+
+/* ── Mailer: shared window + barcode flow overrides ─────────────────────── */
+/* All mailers use .envelope-window--flow and .barcode--flow (defined above) */
+
+/* ── Mailer: Book Club ──────────────────────────────────────────────────── */
+.mailer-bookclub {
+  width: 240px;
+  background: var(--color-paper-white);
+  font-family: var(--font-body);
+}
+
+.mailer-bookclub__header {
+  padding: 8px 12px;
+  text-align: center;
+}
+
+.mailer-bookclub__club-name {
+  font-family: var(--font-logo);
+  font-size: 0.88rem;
+  color: white;
+  letter-spacing: 0.1em;
+}
+
+.mailer-bookclub__tagline {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  color: rgba(255,255,255,0.75);
+  margin-top: 2px;
+  letter-spacing: 0.04em;
+}
+
+.mailer-bookclub__offer {
+  padding: 10px 12px;
+  border-bottom: 2px dashed rgba(0,0,0,0.1);
+}
+
+.mailer-bookclub__headline {
+  font-family: var(--font-print);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-ink-black);
+}
+
+.mailer-bookclub__qty {
+  font-family: var(--font-print);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-top: 4px;
+}
+
+.mailer-bookclub__qty-for {
+  font-size: 0.9rem;
+}
+
+.mailer-bookclub__detail {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  opacity: 0.5;
+  margin-top: 2px;
+}
+
+.mailer-bookclub__body {
+  padding: 8px 12px;
+  font-size: 0.63rem;
+  line-height: 1.7;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.mailer-bookclub__selections {
+  padding: 6px 12px;
+  background: #f8f8f0;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.mailer-bookclub__sel-label {
+  font-family: var(--font-logo);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  opacity: 0.55;
+  margin-bottom: 3px;
+}
+
+.mailer-bookclub__sel-list {
+  font-size: 0.62rem;
+  line-height: 1.65;
+  font-style: italic;
+}
+
+.mailer-bookclub .envelope-window--flow {
+  margin: 6px 12px;
+}
+
+.mailer-bookclub .barcode--flow {
+  margin: 0 12px 8px;
+}
+
+/* ── Mailer: Clearance ──────────────────────────────────────────────────── */
+.mailer-clearance {
+  width: 240px;
+  background: var(--color-paper-white);
+  font-family: var(--font-body);
+}
+
+.mailer-clearance__banner {
+  color: white;
+  padding: 7px 12px;
+  text-align: center;
+  font-family: var(--font-logo);
+  font-size: 0.88rem;
+  letter-spacing: 0.1em;
+}
+
+.mailer-clearance__hero {
+  background: #fff8e8;
+  padding: 8px 12px;
+  text-align: center;
+}
+
+.mailer-clearance__pre {
+  font-family: var(--font-print);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #8B4A0A;
+  line-height: 1;
+}
+
+.mailer-clearance__discount {
+  font-family: var(--font-logo);
+  font-size: 2.6rem;
+  color: var(--color-stamp-red);
+  line-height: 1;
+}
+
+.mailer-clearance__discount-pct { font-size: 1.3rem; }
+.mailer-clearance__discount-off { font-size: 0.9rem; }
+
+.mailer-clearance__body {
+  padding: 8px 12px;
+  font-size: 0.68rem;
+  line-height: 1.6;
+  color: var(--color-ink-black);
+}
+
+.mailer-clearance__co-line {
+  font-family: var(--font-logo);
+  font-size: 0.6rem;
+  margin-bottom: 4px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.mailer-clearance__contact {
+  margin-top: 6px;
+  font-family: var(--font-handwritten);
+  font-size: 0.72rem;
+  color: #8B4A0A;
+}
+
+.mailer-clearance .envelope-window--flow {
+  margin: 0 12px 10px;
+}
+
+.mailer-clearance .barcode--flow {
+  margin: 0 12px 8px;
+}
+
+/* ── Mailer: Magazine ───────────────────────────────────────────────────── */
+.mailer-magazine {
+  width: 220px;
+  background: var(--color-paper-white);
+  font-family: var(--font-body);
+}
+
+.mailer-magazine__header {
+  padding: 10px;
+  text-align: center;
+}
+
+.mailer-magazine__pub-name {
+  font-family: var(--font-logo);
+  font-size: 0.78rem;
+  color: white;
+  letter-spacing: 0.08em;
+}
+
+.mailer-magazine__hero {
+  background: linear-gradient(135deg, #f8e8ff, #fff0f8);
+  padding: 10px 12px;
+}
+
+.mailer-magazine__offer {
+  font-family: var(--font-print);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.mailer-magazine__price { font-size: 1.8rem; }
+
+.mailer-magazine__desc {
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  margin-top: 4px;
+  line-height: 1.5;
+  color: #6a3a7a;
+}
+
+.mailer-magazine__bullets {
+  padding: 6px 12px 4px;
+  font-size: 0.62rem;
+  line-height: 1.7;
+}
+
+.mailer-magazine__promo {
+  margin-top: 5px;
+  font-family: var(--font-handwritten);
+  font-size: 0.72rem;
+}
+
+.mailer-magazine .envelope-window--flow {
+  margin: 4px 12px 8px;
+}
+
+.mailer-magazine .barcode--flow {
+  margin: 0 12px 8px;
+}
+
+/* ── Mailer: Seeds catalog ──────────────────────────────────────────────── */
+.mailer-seeds {
+  width: 260px;
+  background: var(--color-paper-white);
+  font-family: var(--font-body);
+}
+
+.mailer-seeds__header {
+  color: white;
+  padding: 7px 10px;
+  text-align: center;
+  font-family: var(--font-logo);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+}
+
+.mailer-seeds__hero {
+  display: flex;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #e8f4e8;
+}
+
+.mailer-seeds__seedling { flex-shrink: 0; }
+
+.mailer-seeds__hero-copy {
+  font-size: 0.68rem;
+  color: #1a4a2a;
+  line-height: 1.65;
+}
+
+.mailer-seeds__featured {
+  padding: 6px 10px 8px;
+  font-size: 0.66rem;
+  line-height: 1.65;
+  color: var(--color-ink-black);
+  border-bottom: 1px solid #c8e0c8;
+}
+
+.mailer-seeds__strip {
+  color: white;
+  padding: 3px 10px;
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+.mailer-seeds .envelope-window--flow {
+  margin: 8px 10px;
+}
+
+.mailer-seeds .barcode--flow {
+  margin: 0 10px 8px;
+}
+
+/* ── Mailer: Sweepstakes ────────────────────────────────────────────────── */
+.mailer-sweepstakes {
+  width: 260px;
+  background: var(--color-paper-white);
+  font-family: var(--font-body);
+  overflow: hidden;
+}
+
+.mailer-sweepstakes__urgent {
+  background: var(--color-stamp-red);
+  color: white;
+  padding: 5px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mailer-sweepstakes__urgent-label {
+  font-family: var(--font-logo);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+}
+
+.mailer-sweepstakes__urgent-dated {
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  opacity: 0.85;
+}
+
+.mailer-sweepstakes__hero {
+  padding: 10px 14px 6px;
+  border-bottom: 2px dashed rgba(80,55,30,0.25);
+  background: linear-gradient(180deg, #fffbe8, var(--color-paper-white));
+}
+
+.mailer-sweepstakes__co-name {
+  font-family: var(--font-logo);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+
+.mailer-sweepstakes__headline {
+  font-family: var(--font-print);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-ink-black);
+  text-transform: uppercase;
+}
+
+.mailer-sweepstakes__prize {
+  font-family: var(--font-print);
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-stamp-red);
+  letter-spacing: -0.01em;
+}
+
+.mailer-sweepstakes__fine {
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  opacity: 0.55;
+  margin-top: 2px;
+}
+
+.mailer-sweepstakes__body {
+  padding: 6px 14px 4px;
+  font-size: 0.64rem;
+  line-height: 1.7;
+}
+
+.mailer-sweepstakes__scratch {
+  margin: 6px 14px;
+  background: var(--color-manila);
+  border: 1px solid rgba(80,55,30,0.2);
+  padding: 5px 8px;
+  font-size: 0.62rem;
+  color: #5a3a0a;
+  font-family: var(--font-body);
+}
+
+.mailer-sweepstakes__scratch-label {
+  font-family: var(--font-logo);
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.mailer-sweepstakes .envelope-window--flow {
+  margin: 6px 14px;
+}
+
+.mailer-sweepstakes .barcode--flow {
+  margin: 4px 14px 8px;
+}
+
+/* Sweepstakes hero border is dashed — base style set here, color overridden inline */
+.mailer-sweepstakes__hero {
+  border-bottom-style: dashed;
+  border-bottom-width: 2px;
+}
+
+/* Letter closing / signature — removes last static inline styles from letter fragments */
+.letter-closing {
+  font-family: var(--font-handwritten);
+  font-size: 0.82rem;
+  display: block;
+}
+
+.letter-signature--inset {
+  margin-top: 10px;
+  font-size: 1.1rem;
+}
+
+/* ── Bug 4 fix: piece-specific sizing & decoration moved from inline styles ─
+   Rules here replace static inline styles that previously lived on root
+   elements of mail fragment HTML files. Dynamic token-based values (e.g.
+   border colours from world.config.js) remain inline in those files.      */
+
+/* Letters ---------------------------------------------------------------- */
+#letter-found-01 {
+  width: 220px;
+  background: var(--color-paper-white);
+}
+
+#letter-personal-01 {
+  width: 240px;
+  background: var(--color-paper-white);
+}
+
+/* Restaurant menu -------------------------------------------------------- */
+#menu-restaurant-01 {
+  width: 200px;
+  background: var(--color-paper-white);
+  border: 2px solid var(--color-stamp-red);
+  font-family: var(--font-body);
+}
+
+/* Postcards — piece-specific size overrides over the generic .postcard rule */
+#postcard-beach-01 {
+  width: 320px;
+  height: 200px;
+}
+
+#postcard-forest-01 {
+  width: 280px;
+  height: 180px;
+}
+
+/* ── CROSS-CHAPTER NAV ───────────────────────────────────────────────────────
+   Minimal "back to chapter one" link used by pages/chapter-two/index.html
+   (and any future chapter). There's no nav system yet beyond this single
+   link — if a third chapter is added, this is the place to grow it into
+   something more general rather than re-inventing per-page nav links.   */
+#chapter-back-link {
+  position: fixed;
+  top: var(--space-md);
+  left: var(--space-md);
+  z-index: 1000;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--color-ink-black);
+  background: rgba(250, 250, 245, 0.85);
+  border: 1px solid rgba(80, 55, 30, 0.3);
+  border-radius: 3px;
+  padding: var(--space-xs) var(--space-sm);
+  text-decoration: none;
+}
+
+#chapter-back-link:hover,
+#chapter-back-link:focus-visible {
+  background: var(--color-paper-white);
+}

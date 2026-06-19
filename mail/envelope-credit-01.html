@@ -1,0 +1,166 @@
+<!-- ENVELOPE-CREDIT | id:envelope-credit-01 | sender:credit | z:11 | speed:0.50 -->
+  <div class="envelope envelope--credit" data-open="false" aria-label="FirstCard Financial pre-approved credit card offer, October 1997">
+
+    <!-- ENVELOPE BACK -->
+    <div class="envelope-back" aria-hidden="true">
+      <div class="envelope-back__security-tint"></div>
+    </div>
+
+    <!-- LETTER PEEK — interior contents -->
+    <div class="letter-peek letter-peek--folded">
+      <div class="letter-content" aria-hidden="true">
+
+        <!-- Offer letter -->
+        <div class="credit-letter">
+          <div class="credit-letter__header">
+            <div class="credit-letter__sender-name">FirstCard Financial</div>
+            <div class="credit-letter__sender-addr">PO Box 5500 · Wilmington, DE 19801</div>
+            <div class="credit-letter__date">October 17, 1997</div>
+          </div>
+
+          <div class="credit-letter__address-block mail-address--typed">
+            <div>{{recipient.name}}</div>
+            <div>{{recipient.address}}</div>
+            <div>{{recipient.city}}, {{recipient.state}} {{recipient.zip}}</div>
+          </div>
+
+          <p class="credit-letter__salutation">Dear {{recipient.name}},</p>
+
+          <p>You have been <strong>pre-approved</strong> for the FirstCard Platinum Visa® with a credit line of up to <strong>$5,000</strong> — with no annual fee for the first year.</p>
+
+          <p>Your introductory APR is <strong>5.9%</strong> for the first six billing cycles, after which the standard variable APR of 18.9%–21.9% will apply based on your creditworthiness.</p>
+
+          <p>This offer was extended to a select group of individuals who meet our criteria for financial responsibility. To accept, simply complete and return the enclosed acceptance form by <strong>November 14, 1997</strong>.</p>
+
+          <p>Features of your new FirstCard Platinum Visa®:</p>
+          <ul class="credit-letter__features">
+            <li>No annual fee — first year</li>
+            <li>Cash advance checks enclosed</li>
+            <li>24-hour customer service: 1-800-555-0147</li>
+            <li>$0 fraud liability on unauthorized charges</li>
+          </ul>
+
+          <p>To decline this offer, you may discard this mailing. Your credit record was not affected by this pre-approval screening.</p>
+
+          <div class="credit-letter__sign-block">
+            <div class="credit-letter__sig">R. Weston</div>
+            <div>R. Weston, VP of Consumer Lending</div>
+            <div>FirstCard Financial, N.A.</div>
+          </div>
+
+          <p class="credit-letter__fine-print">Offer valid for residents of OR, WA, CA, ID, NV only. Pre-approval based on prescreened credit criteria. Final approval subject to verification of income and credit history. See enclosed terms and conditions. FirstCard Financial, N.A. is a member FDIC institution.</p>
+        </div>
+
+        <!-- Fake plastic card -->
+        <div class="credit-card-replica" aria-label="Sample FirstCard Platinum Visa card">
+          <div class="credit-card-replica__chip"></div>
+          <div class="credit-card-replica__number">4716 •••• •••• ••••</div>
+          <div class="credit-card-replica__label">FIRSTCARD PLATINUM</div>
+          <div class="credit-card-replica__network">VISA</div>
+          <div class="credit-card-replica__name">{{recipient.name}}</div>
+          <div class="credit-card-replica__watermark">NOT A VALID CARD — SAMPLE ONLY</div>
+        </div>
+
+        <!-- Application / acceptance form -->
+        <div class="credit-app">
+          <div class="credit-app__header">ACCEPTANCE CERTIFICATE — PLEASE RETURN BY NOV 14, 1997</div>
+          <div class="credit-app__row">
+            <span class="credit-app__label">Full Legal Name:</span>
+            <span class="credit-app__field">{{recipient.name}}</span>
+          </div>
+          <div class="credit-app__row">
+            <span class="credit-app__label">Address:</span>
+            <span class="credit-app__field">{{recipient.address}}, {{recipient.city}} {{recipient.state}} {{recipient.zip}}</span>
+          </div>
+          <div class="credit-app__row">
+            <span class="credit-app__label">Annual Income:</span>
+            <span class="credit-app__field credit-app__field--blank">$_______________</span>
+          </div>
+          <div class="credit-app__row">
+            <span class="credit-app__label">Employer:</span>
+            <span class="credit-app__field credit-app__field--blank">_______________________________</span>
+          </div>
+          <div class="credit-app__sig-block">
+            <span class="credit-app__sig-label">Authorized Signature (required):</span>
+            <span class="credit-app__sig-line">X _________________________________</span>
+            <span class="credit-app__sig-date">Date: ___________</span>
+          </div>
+          <div class="credit-app__fine-print">By signing above you agree to the FirstCard Financial Cardholder Agreement enclosed herein.</div>
+        </div>
+
+        <!-- Nested return envelope -->
+        <div class="return-envelope" aria-label="Business reply return envelope">
+          <div class="return-envelope__front">
+            <div class="return-envelope__brm-block">
+              <div class="return-envelope__brmline">BUSINESS REPLY MAIL</div>
+              <div class="return-envelope__brmline">FIRST-CLASS MAIL &nbsp; PERMIT NO. 4401 &nbsp; WILMINGTON DE</div>
+              <div class="return-envelope__brmline">POSTAGE WILL BE PAID BY ADDRESSEE</div>
+            </div>
+            <div class="mail-address mail-address--typed return-envelope__address">
+              <span class="mail-address__name">FirstCard Financial</span>
+              <span class="mail-address__line">PO Box 5500</span>
+              <span class="mail-address__line">Wilmington, DE 19801-9987</span>
+            </div>
+            <div class="return-envelope__brmfoot">NO POSTAGE NECESSARY IF MAILED IN THE UNITED STATES</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ENVELOPE FLAP -->
+    <div class="envelope-flap envelope-flap--torn" aria-hidden="true">
+      <div class="envelope-flap-inner"></div>
+    </div>
+
+    <!-- ENVELOPE FRONT -->
+    <div class="envelope-front">
+
+      <!-- Bold promo exterior printing -->
+      <div class="credit-exterior">
+        <div class="credit-exterior__urgent">OPEN IMMEDIATELY</div>
+        <div class="credit-exterior__preapproved">PRE-APPROVED</div>
+        <div class="credit-exterior__sub">Credit line up to $5,000 · No annual fee first year</div>
+      </div>
+
+      <!-- Return address -->
+      <div class="mail-address mail-address--typed envelope__return">
+        <span class="mail-address__name">FirstCard Financial</span>
+        <span class="mail-address__line">PO Box 5500</span>
+        <span class="mail-address__line">Wilmington, DE 19801</span>
+      </div>
+
+      <!-- Permit block (no stamp on bulk credit mailers) -->
+      <div class="permit-block" aria-label="Bulk Rate US Postage Paid">
+        <span class="permit-block__line">BULK RATE</span>
+        <span class="permit-block__line">US POSTAGE</span>
+        <span class="permit-block__line">PAID</span>
+        <span class="permit-block__line permit-block__permit">WILMINGTON DE</span>
+        <span class="permit-block__line permit-block__permit">PERMIT NO. 4401</span>
+      </div>
+
+      <!-- Recipient address — window or direct print -->
+      <div class="mail-address mail-address--typed envelope__recipient">
+        <span class="mail-address__name">{{recipient.name}}</span>
+        <span class="mail-address__line">{{recipient.address}}</span>
+        <span class="mail-address__line">{{recipient.city}}, {{recipient.state}}  {{recipient.zip}}</span>
+      </div>
+
+      <!-- Postmark -->
+      <div class="postmark postmark--purple postmark--envelope" aria-label="Postmarked {{postmark}}">
+        <svg viewBox="0 0 80 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M52,6 Q60,9 68,6 Q76,3 80,6 L80,30 Q76,33 68,30 Q60,27 52,30 Q44,33 36,30 L36,6 Q44,3 52,6Z"
+                fill="none" stroke="var(--color-cancellation-purple)" stroke-width="1"/>
+          <line x1="38" y1="12" x2="78" y2="12" stroke="var(--color-cancellation-purple)" stroke-width="0.75"/>
+          <line x1="38" y1="18" x2="78" y2="18" stroke="var(--color-cancellation-purple)" stroke-width="0.75"/>
+          <line x1="38" y1="24" x2="78" y2="24" stroke="var(--color-cancellation-purple)" stroke-width="0.75"/>
+          <text x="18" y="10" text-anchor="middle" class="postmark-city">{{sender.city}}</text>
+          <text x="18" y="20" text-anchor="middle" class="postmark-state">{{sender.state}}</text>
+          <text x="18" y="30" text-anchor="middle" class="postmark-date">{{postmark}}</text>
+        </svg>
+      </div>
+
+      <div class="barcode" data-zip="{{recipient.zip}}" aria-hidden="true"></div>
+    </div>
+
+  </div>

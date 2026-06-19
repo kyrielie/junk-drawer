@@ -1,0 +1,40 @@
+<!-- MAILER | id:mailer-clearance-01 | sender:null | z:7 | speed:0.22 -->
+<div class="mailer-clearance" style="border:2px solid {{config.mailerClearance.accentColor}};">
+
+  <div class="mailer-clearance__banner" style="background:{{config.mailerClearance.accentColor}};">
+    {{config.mailerClearance.banner}}
+  </div>
+
+  <div class="mailer-clearance__hero">
+    <div class="mailer-clearance__pre">
+      {{config.mailerClearance.preText}}
+    </div>
+    <div class="mailer-clearance__discount">
+      {{config.mailerClearance.discountAmount}}<span class="mailer-clearance__discount-pct">%</span><br>
+      <span class="mailer-clearance__discount-off">OFF</span>
+    </div>
+  </div>
+
+  <div class="mailer-clearance__body">
+    <div class="mailer-clearance__co-line" style="color:{{config.mailerClearance.accentColor}};">
+      {{config.mailerClearance.companyName}} &middot; {{config.mailerClearance.subheader}}
+    </div>
+    {{config.mailerClearance.bodyText}}
+    <div class="mailer-clearance__contact">
+      {{config.mailerClearance.address}}<br>
+      {{config.mailerClearance.phone}}
+    </div>
+  </div>
+
+  <!-- Recipient window -->
+  <div class="envelope-window envelope-window--flow">
+    <div class="mail-address mail-address--window">
+      <span class="address-name">{{recipient.name}}</span><br>
+      <span class="address-street">{{recipient.address}}</span><br>
+      <span class="address-cityline">{{recipient.city}}, {{recipient.state}} {{recipient.zip}}</span>
+    </div>
+  </div>
+
+  <div class="barcode barcode--flow" data-zip="{{recipient.zip}}"></div>
+
+</div>

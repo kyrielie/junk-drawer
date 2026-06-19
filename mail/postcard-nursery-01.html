@@ -1,0 +1,75 @@
+<!-- AD-POSTCARD | id:postcard-nursery-01 | sender:nursery | z:7 | speed:0.28 -->
+  <div class="ad-postcard" aria-label="Promotional spring sale postcard from {{sender.name}}, postmarked May 1997">
+
+    <!-- FRONT — promotional face -->
+    <div class="ad-postcard__front">
+      <div class="ad-postcard__header">
+        <svg class="ad-postcard__logo-icon" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- Simple flower clip-art SVG -->
+          <circle cx="14" cy="14" r="4" fill="#6B8E4E"/>
+          <ellipse cx="14" cy="6"  rx="3.5" ry="5" fill="#8FBC5A" transform="rotate(0  14 14)"/>
+          <ellipse cx="14" cy="6"  rx="3.5" ry="5" fill="#8FBC5A" transform="rotate(45 14 14)"/>
+          <ellipse cx="14" cy="6"  rx="3.5" ry="5" fill="#A8CC6A" transform="rotate(90 14 14)"/>
+          <ellipse cx="14" cy="6"  rx="3.5" ry="5" fill="#8FBC5A" transform="rotate(135 14 14)"/>
+          <ellipse cx="14" cy="6"  rx="3.5" ry="5" fill="#8FBC5A" transform="rotate(180 14 14)"/>
+          <ellipse cx="14" cy="6"  rx="3.5" ry="5" fill="#A8CC6A" transform="rotate(225 14 14)"/>
+          <ellipse cx="14" cy="6"  rx="3.5" ry="5" fill="#8FBC5A" transform="rotate(270 14 14)"/>
+          <ellipse cx="14" cy="6"  rx="3.5" ry="5" fill="#8FBC5A" transform="rotate(315 14 14)"/>
+          <circle cx="14" cy="14" r="4" fill="#D4A017"/>
+        </svg>
+        <div class="ad-postcard__sender-name">{{sender.name}}</div>
+      </div>
+
+      <div class="ad-postcard__offer">
+        <div class="ad-postcard__offer-eyebrow">SPRING SALE</div>
+        <div class="ad-postcard__offer-headline">20% OFF<br>All Perennials</div>
+        <div class="ad-postcard__offer-dates">May 24 through June 7, 1997</div>
+      </div>
+
+      <div class="ad-postcard__body">
+        <p>Roses · Lavender · Coneflowers · Daylilies<br>
+        Hostas · Black-Eyed Susan · Ornamental Grasses</p>
+        <p>Gift certificates available. Free planting guide with any purchase over $25.</p>
+      </div>
+
+      <div class="ad-postcard__footer">
+        <span>{{sender.address}}, {{sender.city}}, {{sender.state}} {{sender.zip}}</span>
+        <span class="ad-postcard__phone">(541) 555-0184</span>
+        <span>Open Daily 8am–6pm</span>
+      </div>
+    </div>
+
+    <!-- BACK — address side -->
+    <div class="ad-postcard__back">
+
+      <!-- Left: offer reminder -->
+      <div class="ad-postcard__back-message">
+        <div class="ad-postcard__back-tagline">Bring this card in for<br>an additional 5% discount.</div>
+        <div class="ad-postcard__back-sub">Good through June 7, 1997 only.<br>Not valid with other offers.</div>
+      </div>
+
+      <!-- Right: address block + permit -->
+      <div class="ad-postcard__address-col">
+
+        <!-- Permit block (no adhesive stamp on bulk ad mailers) -->
+        <div class="permit-block permit-block--sm" aria-label="Presorted Standard US Postage Paid">
+          <span class="permit-block__line">PRSRT STD</span>
+          <span class="permit-block__line">US POSTAGE</span>
+          <span class="permit-block__line">PAID</span>
+          <span class="permit-block__line permit-block__permit">ASHFORD OR</span>
+          <span class="permit-block__line permit-block__permit">PERMIT NO. 218</span>
+        </div>
+
+        <!-- Recipient address — inkjet-printed directly (typed style) -->
+        <div class="mail-address mail-address--typed ad-postcard__recipient">
+          <span class="mail-address__name">{{recipient.name}}</span>
+          <span class="mail-address__line">{{recipient.address}}</span>
+          <span class="mail-address__line">{{recipient.city}}, {{recipient.state}}  {{recipient.zip}}</span>
+        </div>
+
+        <!-- Barcode sprayed by USPS sorting machine -->
+        <div class="barcode" data-zip="{{recipient.zip}}" aria-hidden="true"></div>
+      </div>
+
+    </div>
+  </div>
