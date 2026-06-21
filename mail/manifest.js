@@ -547,6 +547,7 @@ export const MANIFEST = [
     zIndex:        43,
     rotation:      -11.5,
     speed:         0,
+    decorative:    true,  // small SVG desk prop, not paper — see CSS note on .is-decorative-object
     ariaLabel:     'Pen on the desk',
   },
   {
@@ -559,6 +560,7 @@ export const MANIFEST = [
     zIndex:        44,
     rotation:      -8.5,
     speed:         0,
+    decorative:    true,  // small SVG desk prop, not paper — see CSS note on .is-decorative-object
     ariaLabel:     'Letter opener on the desk',
   },
   {
@@ -571,6 +573,7 @@ export const MANIFEST = [
     zIndex:        45,
     rotation:      -6.5,
     speed:         0,
+    decorative:    true,  // small SVG desk prop, not paper — see CSS note on .is-decorative-object
     ariaLabel:     'Wax seal on the desk',
   },
   {
@@ -583,6 +586,7 @@ export const MANIFEST = [
     zIndex:        46,
     rotation:      -5.5,
     speed:         0,
+    decorative:    true,  // small SVG desk prop, not paper — see CSS note on .is-decorative-object
     ariaLabel:     'Strip of stamps on the desk',
   },
   {
@@ -595,6 +599,7 @@ export const MANIFEST = [
     zIndex:        47,
     rotation:      -4.5,
     speed:         0,
+    decorative:    true,  // small SVG desk prop, not paper — see CSS note on .is-decorative-object
     ariaLabel:     'Large eagle stamp on the desk',
   },
   {
@@ -607,6 +612,7 @@ export const MANIFEST = [
     zIndex:        48,
     rotation:      -1.5,
     speed:         0,
+    decorative:    true,  // small SVG desk prop, not paper — see CSS note on .is-decorative-object
     ariaLabel:     'Decorative postmark graphic',
   },
   {
@@ -619,6 +625,7 @@ export const MANIFEST = [
     zIndex:        49,
     rotation:      1.5,
     speed:         0,
+    decorative:    true,  // small SVG desk prop, not paper — see CSS note on .is-decorative-object
     ariaLabel:     'Pencil on the desk',
   },
   {
@@ -631,6 +638,7 @@ export const MANIFEST = [
     zIndex:        50,
     rotation:      6.5,
     speed:         0,
+    decorative:    true,  // small SVG desk prop, not paper — see CSS note on .is-decorative-object
     ariaLabel:     'Par Avion airmail label',
   },
   {
@@ -643,6 +651,7 @@ export const MANIFEST = [
     zIndex:        51,
     rotation:      8.5,
     speed:         0,
+    decorative:    true,  // small SVG desk prop, not paper — see CSS note on .is-decorative-object
     ariaLabel:     'Sheet of return address labels',
   },
 

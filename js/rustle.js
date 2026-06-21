@@ -70,17 +70,35 @@ const SHADOW_HOVER =
 const SHADOW_REST =
   '3px 5px 8px rgba(80,55,30,0.35), 1px 2px 3px rgba(80,55,30,0.20), inset 0 0 0 1px rgba(255,255,255,0.40)';
 
+// Desk props (.is-decorative-object) use a shape-following drop-shadow
+// instead of box-shadow (see css/main.css's note by the same class) — a
+// box-shadow's inset white "paper edge" highlight is exactly what produced
+// the rectangle-around-a-circle artifact this is fixing, so these need
+// their own filter-based hover/rest pair rather than reusing SHADOW_*.
+const FILTER_HOVER = 'drop-shadow(5px 7px 6px rgba(80,55,30,0.50))';
+
 function onPieceEnter(e) {
   const piece = e.currentTarget;
-  piece.dataset.hover   = 'true';
-  piece.style.boxShadow = SHADOW_HOVER;
+  piece.dataset.hover = 'true';
+  if (piece.classList.contains('is-decorative-object')) {
+    piece.style.filter = FILTER_HOVER;
+  } else {
+    piece.style.boxShadow = SHADOW_HOVER;
+  }
   setTransform(piece);
 }
 
 function onPieceLeave(e) {
   const piece = e.currentTarget;
-  piece.dataset.hover   = 'false';
-  piece.style.boxShadow = SHADOW_REST;
+  piece.dataset.hover = 'false';
+  if (piece.classList.contains('is-decorative-object')) {
+    // Clear the inline override and fall back to the CSS base filter
+    // (.mail-piece.is-decorative-object's drop-shadow) rather than
+    // duplicating that value here.
+    piece.style.filter = '';
+  } else {
+    piece.style.boxShadow = SHADOW_REST;
+  }
   setTransform(piece);
 }
 

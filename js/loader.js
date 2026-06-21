@@ -106,7 +106,7 @@ function applyTokens(html, tokens) {
 
 function buildPieceElement(innerHtml, entry) {
   const wrap     = document.createElement('div');
-  wrap.className = 'mail-piece';
+  wrap.className = entry.decorative ? 'mail-piece is-decorative-object' : 'mail-piece';
   wrap.id        = entry.id;
   wrap.innerHTML = innerHtml;
 

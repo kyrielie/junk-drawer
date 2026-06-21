@@ -74,7 +74,7 @@
     1px 2px 3px rgba(80, 55, 30, 0.30);
 
   /* ── Transitions ──────────────────────────────────────────────────────── */
-  --transition-lift:    box-shadow 0.18s ease;
+  --transition-lift:    box-shadow 0.18s ease, filter 0.18s ease;
   --transition-flap:    transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-peek:    transform 0.55s cubic-bezier(0.34, 1.06, 0.64, 1);
   --transition-overlay: opacity 0.22s ease, visibility 0s linear 0s;
@@ -192,6 +192,15 @@ a {
   z-index: 9000 !important;
 }
 
+/* Decorative desk props keep their shape-following drop-shadow while
+   being dragged too — box-shadow above would otherwise win here since
+   class-selector specificity beats the base .is-decorative-object rule. */
+#canvas .mail-piece.is-decorative-object.is-dragging,
+#drawer-pile .mail-piece.is-decorative-object.is-dragging {
+  box-shadow: none;
+  filter: drop-shadow(6px 9px 7px rgba(80, 55, 30, 0.55));
+}
+
 
 /* ═══════════════════════════════════════════════════════════════════════════
    5. MAIL PIECE — base wrapper
@@ -203,6 +212,20 @@ a {
   will-change: transform;
   cursor: default;
   transition: var(--transition-lift);
+}
+
+/* Desk props (pen, wax seal, postmark, etc.) aren't paper — box-shadow
+   always follows the element's rectangular bounding box, which produced a
+   visible white/brown rectangle outline around round or irregularly-shaped
+   SVG art (the wax seal, the postmark, the angled pen). filter:drop-shadow
+   follows the actual rendered alpha shape instead, so the shadow matches
+   the prop's silhouette. Tagged via manifest entry.decorative — see
+   js/loader.js buildPieceElement(). The hover/rest JS shadow swap in
+   rustle.js (onPieceEnter/onPieceLeave) checks for this class and sets
+   filter instead of box-shadow for the same reason. */
+.mail-piece.is-decorative-object {
+  box-shadow: none;
+  filter: drop-shadow(3px 4px 4px rgba(80, 55, 30, 0.40));
 }
 
 
@@ -2224,14 +2247,23 @@ body::after {
 /* Canvas in pile mode: fixed size centred on the drawer face */
 #canvas.canvas--pile {
   position: relative;
-  width: 100%;
-  max-width: 800px;
-  min-height: 560px;
-  height: 560px;
+  /* Previously capped at max-width:800px / height:560px, centered with
+     margin:0 auto. That made the canvas (and therefore the drag-clamp
+     bounds in rustle.js's bindDrag, which reads container.offsetWidth/
+     offsetHeight) much smaller than the visible play area the rails and
+     floor bar visually frame — the desk looked full-screen but pieces
+     could only ever be dragged into a small centered box, leaving most of
+     the screen visually "desk" but functionally dead space. Size to the
+     actual area between the fixed 36px side rails (body::before/::after)
+     and the fixed 36px floor bar (#drawer-floor) instead. */
+  width: calc(100vw - 72px);
+  height: calc(100vh - 36px);
+  min-width: 320px;
+  min-height: 480px;
   padding: 0;
   box-shadow: none;
   background: none;
-  margin: 0 auto;
+  margin: 0;
   /* Override the desktop striped background */
   background-image: none;
 }
