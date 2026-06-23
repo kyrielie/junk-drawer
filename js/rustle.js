@@ -28,6 +28,13 @@ import { playRustle } from './sound.js';
 // Call whenever hover state changes.
 
 export function setTransform(el) {
+  if (el.dataset.zoomed === 'true') {
+    const tx = parseFloat(el.dataset.zoomTx)    || 0;
+    const ty = parseFloat(el.dataset.zoomTy)    || 0;
+    const s  = parseFloat(el.dataset.zoomScale) || 1;
+    el.style.transform = `translate(${tx}px, ${ty}px) scale(${s})`;
+    return;
+  }
   const rot    = parseFloat(el.dataset.rot || '0');
   const liftPx = el.dataset.hover === 'true' ? -4 : 0;
   el.style.transform = `rotate(${rot}deg) translateY(${liftPx}px)`;
@@ -118,36 +125,47 @@ function bindHover(piece) {
 // piece._suppressClick so the subsequent 'click' event (which always fires
 // after pointerup) is swallowed without reaching onPieceClick().
 
+const TOSS_THRESHOLD = 130; // px of drag, from the zoomed/centered position, that counts as a toss
+
 function bindDrag(piece, container) {
   let startX   = null;
   let startY   = null;
   let origLeft = 0;
   let origTop  = 0;
+  let zoomOrigTx = 0;
+  let zoomOrigTy = 0;
   let hasMoved = false;
   let rustleAt = 0;
 
   piece.addEventListener('pointerdown', (e) => {
     if (e.button !== 0 && e.pointerType === 'mouse') return;
 
-    // Lift to top of pile and play pickup sound
-    liftPiece(piece, container);
     playRustle({ force: true });
+
+    if (piece.classList.contains('is-zoomed')) {
+      // Zoomed pieces don't reposition via left/top — drag adjusts the
+      // zoom translate offset directly. No pile clamp, no lift (z-index is
+      // already pinned above everything else while zoomed).
+      zoomOrigTx = parseFloat(piece.dataset.zoomTx) || 0;
+      zoomOrigTy = parseFloat(piece.dataset.zoomTy) || 0;
+    } else {
+      liftPiece(piece, container);
+      // Read the piece's current layout position. (Previously this was read
+      // via getBoundingClientRect() as a workaround for pieces whose
+      // style.left/top was never set — but getBoundingClientRect() returns
+      // the rotated element's axis-aligned bounding box, which is offset
+      // from the unrotated style.left/top by a rotation-dependent amount,
+      // causing a visible snap on every drag start. The real cause of
+      // "style.left never set" was the duplicate-wrapper bug in mail/*.html,
+      // now fixed (every .mail-piece in the DOM is the single node
+      // loader.js creates and positions), so the simple, accurate read is
+      // safe again.)
+      origLeft = parseInt(piece.style.left, 10) || 0;
+      origTop  = parseInt(piece.style.top, 10) || 0;
+    }
 
     startX   = e.clientX;
     startY   = e.clientY;
-
-    // Read the piece's current layout position. (Previously this was read
-    // via getBoundingClientRect() as a workaround for pieces whose
-    // style.left/top was never set — but getBoundingClientRect() returns
-    // the rotated element's axis-aligned bounding box, which is offset from
-    // the unrotated style.left/top by a rotation-dependent amount, causing
-    // a visible snap on every drag start. The real cause of "style.left
-    // never set" was the duplicate-wrapper bug in mail/*.html, now fixed
-    // (every .mail-piece in the DOM is the single node loader.js creates
-    // and positions), so the simple, accurate read is safe again.)
-    origLeft = parseInt(piece.style.left, 10) || 0;
-    origTop  = parseInt(piece.style.top, 10) || 0;
-
     hasMoved = false;
 
     piece.setPointerCapture(e.pointerId);
@@ -173,6 +191,13 @@ function bindDrag(piece, container) {
       rustleAt = now;
     }
 
+    if (piece.classList.contains('is-zoomed')) {
+      piece.dataset.zoomTx = String(zoomOrigTx + dx);
+      piece.dataset.zoomTy = String(zoomOrigTy + dy);
+      setTransform(piece);
+      return;
+    }
+
     const maxLeft = Math.max(0, container.offsetWidth  - piece.offsetWidth);
     const maxTop  = Math.max(0, container.offsetHeight - piece.offsetHeight);
 
@@ -189,6 +214,23 @@ function bindDrag(piece, container) {
 
     piece.classList.remove('is-dragging');
     piece.style.cursor = '';
+
+    if (piece.classList.contains('is-zoomed') && didMove) {
+      const liveTx   = parseFloat(piece.dataset.zoomTx) || 0;
+      const liveTy   = parseFloat(piece.dataset.zoomTy) || 0;
+      const distance = Math.hypot(liveTx - zoomOrigTx, liveTy - zoomOrigTy);
+      piece._suppressClick = true;
+      if (distance > TOSS_THRESHOLD) {
+        exitZoom(piece, { toss: true });
+      } else {
+        // Snap back to centered — the existing transform transition
+        // (see --transition-zoom) animates this smoothly.
+        piece.dataset.zoomTx = String(zoomOrigTx);
+        piece.dataset.zoomTy = String(zoomOrigTy);
+        setTransform(piece);
+      }
+      return;
+    }
 
     if (didMove) {
       piece._suppressClick = true;
@@ -210,7 +252,14 @@ function openEnvelope(envelope) {
   envelope.dataset.open = 'true';
   envelope.classList.add('is-open');
   const peek = envelope.querySelector('.letter-peek');
-  if (peek) peek.addEventListener('click', onLetterPeekClick, { once: true });
+  if (peek && !peek._peekBound) {
+    // Not {once:true} — a piece can be zoomed, flipped, flipped back, and
+    // flipped again within a single zoom session, and the peek should keep
+    // working as an alternate flip trigger (alongside the explicit flip
+    // button) every time, not just the first.
+    peek.addEventListener('click', onLetterPeekClick);
+    peek._peekBound = true;
+  }
 }
 
 function closeEnvelope(envelope) {
@@ -223,7 +272,8 @@ function onEnvelopeClick(e) {
   const envelope = e.currentTarget.closest('.envelope');
   if (!envelope) return;
   if (e.target.closest('.letter-peek') && envelope.dataset.open === 'true') return;
-  envelope.dataset.open === 'true' ? closeEnvelope(envelope) : openEnvelope(envelope);
+  const piece = envelope.closest('.mail-piece');
+  if (piece) onPieceTap(piece, e);
 }
 
 function bindEnvelope(piece) {
@@ -240,10 +290,8 @@ function bindEnvelope(piece) {
 // ── POSTCARD FLIP ─────────────────────────────────────────────────────────────
 
 function onPostcardClick(e) {
-  const postcard = e.currentTarget;
-  const back     = postcard.querySelector('.postcard-back');
-  if (!back) return;
-  openOverlay(back.innerHTML, 'postcard', postcard.closest('.mail-piece'));
+  const piece = e.currentTarget.closest('.mail-piece');
+  if (piece) onPieceTap(piece, e);
 }
 
 function bindPostcard(piece) {
@@ -308,17 +356,16 @@ function bindMailer(piece) {
   const front = mailer.querySelector('.envelope-front--mailer');
   if (!front) return;
   front.style.cursor = 'pointer';
-  front.addEventListener('click', () => {
-    if (mailer.dataset.open === 'true') {
-      mailer.dataset.open = 'false';
-      mailer.classList.remove('is-open');
-    } else {
-      mailer.dataset.open = 'true';
-      mailer.classList.add('is-open');
-      const peek = mailer.querySelector('.letter-peek');
-      if (peek) peek.addEventListener('click', onLetterPeekClick, { once: true });
-    }
-  });
+  front.addEventListener('click', onEnvelopeClick);
+}
+
+// ── LETTER PEEK ───────────────────────────────────────────────────────────────
+// Alternate flip trigger once an envelope/mailer is open mid-zoom — see the
+// non-{once:true} note on openEnvelope() above.
+
+function onLetterPeekClick(e) {
+  const piece = e.currentTarget.closest('.mail-piece');
+  if (piece) onPieceTap(piece, e);
 }
 
 // ── SEND TO DRAWER ────────────────────────────────────────────────────────────
@@ -370,142 +417,180 @@ function sendToDrawer(pieceEl) {
   }, 380);
 }
 
-// ── OVERLAY ───────────────────────────────────────────────────────────────────
+// ── ZOOM & FLIP ────────────────────────────────────────────────────────────────
+//
+// Replaces the old "click piece -> open a modal overlay" flow. Tapping a
+// piece enlarges it in place (still inside its current container — #canvas
+// or #drawer-pile — just scaled via setTransform, never removed from the
+// DOM). Tapping it again, or its flip button, flips to the back face for
+// pieces that have one (manifest entry.flip: 'rotate' | 'rise', surfaced
+// here as piece.dataset.flip by loader.js). Pieces with no back still zoom,
+// just with no flip control — there's nothing to flip to.
+//
+// Dragging a zoomed piece is a toss: bindDrag's pointer handlers (above)
+// detect el.classList.contains('is-zoomed') and adjust the zoom offset
+// directly rather than pile position; release far enough from center and
+// exitZoom({toss:true}) sends it to the drawer via sendToDrawer(), release
+// close and it springs back to centered.
 
-let overlay     = null;
-let overlayBody = null;
+let zoomBackdrop = null;
+let zoomedPiece  = null;
 
-function buildOverlay() {
-  overlay = document.createElement('div');
-  overlay.id = 'letter-overlay';
-  overlay.setAttribute('role', 'dialog');
-  overlay.setAttribute('aria-modal', 'true');
-  overlay.setAttribute('aria-label', 'Letter contents');
-  overlay.setAttribute('aria-hidden', 'true');
-
-  const closeBtn = document.createElement('button');
-  closeBtn.className   = 'overlay-close';
-  closeBtn.textContent = '✕';
-  closeBtn.setAttribute('aria-label', 'Close');
-  closeBtn.addEventListener('click', closeOverlay);
-
-  overlayBody = document.createElement('div');
-  overlayBody.className = 'overlay-body';
-
-  overlay.appendChild(closeBtn);
-  overlay.appendChild(overlayBody);
-  document.body.appendChild(overlay);
-
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) closeOverlay();
+function buildZoomBackdrop() {
+  zoomBackdrop = document.createElement('div');
+  zoomBackdrop.id = 'zoom-backdrop';
+  zoomBackdrop.setAttribute('aria-hidden', 'true');
+  zoomBackdrop.addEventListener('click', () => {
+    if (zoomedPiece) exitZoom(zoomedPiece);
   });
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && overlay.classList.contains('is-visible')) closeOverlay();
+  document.body.appendChild(zoomBackdrop);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && zoomedPiece) exitZoom(zoomedPiece);
   });
 }
 
-function buildActionsBar(pieceEl) {
-  const bar = document.createElement('div');
-  bar.className = 'overlay-actions';
-
-  const sendBtn = document.createElement('button');
-  sendBtn.className = 'btn-send-desktop';
-  sendBtn.setAttribute('aria-label', 'Send this piece to the drawer');
-  sendBtn.innerHTML = `
-    <svg viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect x="1" y="3" width="11" height="8" rx="1"
-            stroke="currentColor" stroke-width="1.1" fill="none"/>
-      <path d="M1.5 3.5L6.5 8L11.5 3.5"
-            stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
-      <path d="M6.5 1V5.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
-      <path d="M4.5 3L6.5 1L8.5 3"
-            stroke="currentColor" stroke-width="1.1"
-            stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    Send to drawer`;
-
-  const label = document.createElement('span');
-  label.className = 'overlay-sent-label';
-
-  sendBtn.addEventListener('click', () => {
-    if (!pieceEl) return;
-    sendBtn.classList.add('sent');
-    sendBtn.textContent = '✓  Sent to drawer';
-    label.textContent   = '— close the overlay to see it';
-    sendToDrawer(pieceEl);
-    setTimeout(closeOverlay, 900);
-  });
-
-  bar.appendChild(sendBtn);
-  bar.appendChild(label);
-  return bar;
+function computeZoomMetrics(piece, container) {
+  const targetW = Math.min(piece.offsetWidth * 1.7, container.offsetWidth * 0.82, 640);
+  const scale   = targetW / piece.offsetWidth;
+  const tx = (container.offsetWidth  / 2) - (piece.offsetLeft + piece.offsetWidth  / 2);
+  const ty = (container.offsetHeight / 2) - (piece.offsetTop  + piece.offsetHeight / 2);
+  return { tx, ty, scale };
 }
 
-function openOverlay(contentHTML, type = 'letter', pieceEl = null) {
-  if (!overlay) buildOverlay();
+function buildZoomControls(piece) {
+  const controls = document.createElement('div');
+  controls.className = 'zoom-controls';
 
-  overlay.querySelectorAll('.overlay-actions').forEach(el => el.remove());
-
-  overlayBody.innerHTML           = contentHTML;
-  overlayBody.dataset.overlayType = type;
-
-  const closeBtn = overlay.querySelector('.overlay-close');
-  if (closeBtn) overlay.insertBefore(closeBtn, overlayBody);
-
-  if (pieceEl && pieceEl.closest('#canvas')) {
-    overlayBody.after(buildActionsBar(pieceEl));
+  if (piece.dataset.flip) {
+    const flipBtn = document.createElement('button');
+    flipBtn.type = 'button';
+    flipBtn.className = 'zoom-flip-btn';
+    flipBtn.setAttribute('aria-label', 'Flip to see the back');
+    flipBtn.setAttribute('aria-pressed', 'false');
+    flipBtn.textContent = '⟲ Flip';
+    flipBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleFlip(piece);
+    });
+    controls.appendChild(flipBtn);
   }
 
-  overlay.classList.add('is-visible');
-  overlay.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
-  overlay.querySelector('.overlay-close')?.focus();
+  const sendBtn = document.createElement('button');
+  sendBtn.type = 'button';
+  sendBtn.className = 'zoom-send-btn';
+  sendBtn.setAttribute('aria-label', 'Send this piece to the drawer');
+  sendBtn.textContent = '↓ Send to drawer';
+  sendBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    exitZoom(piece, { toss: true });
+  });
+  controls.appendChild(sendBtn);
+
+  return controls;
 }
 
-function closeOverlay() {
-  if (!overlay) return;
-  overlay.classList.remove('is-visible');
-  overlay.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
+function enterZoom(piece) {
+  if (piece.classList.contains('is-zoomed')) return;
+  if (zoomedPiece && zoomedPiece !== piece) exitZoom(zoomedPiece);
+  if (!zoomBackdrop) buildZoomBackdrop();
+
+  const container = piece.parentElement;
+  const { tx, ty, scale } = computeZoomMetrics(piece, container);
+
+  piece.dataset.zoomed    = 'true';
+  piece.dataset.zoomTx    = String(tx);
+  piece.dataset.zoomTy    = String(ty);
+  piece.dataset.zoomScale = String(scale);
+  piece.classList.add('is-zoomed');
+  piece.style.zIndex = '9500';
+  setTransform(piece);
+
+  if (piece.dataset.flip === 'rise') {
+    const envelope = piece.querySelector('.envelope, .envelope--mailer');
+    if (envelope) openEnvelope(envelope);
+  }
+
+  piece.appendChild(buildZoomControls(piece));
+
+  zoomBackdrop.classList.add('is-visible');
+  zoomedPiece = piece;
+  piece.setAttribute('aria-expanded', 'true');
+  piece.querySelector('.zoom-controls button')?.focus();
 }
 
-// ── LETTER PEEK ───────────────────────────────────────────────────────────────
+function exitZoom(piece, { toss = false } = {}) {
+  if (!piece.classList.contains('is-zoomed')) return;
 
-function onLetterPeekClick(e) {
-  const peek    = e.currentTarget;
-  const content = peek.querySelector('.letter-content');
-  if (!content) return;
-  openOverlay(content.innerHTML, 'letter', peek.closest('.mail-piece'));
+  piece.querySelector('.zoom-controls')?.remove();
+  piece.classList.remove('is-zoomed', 'is-flipped');
+  piece.removeAttribute('aria-expanded');
+  delete piece.dataset.zoomed;
+  delete piece.dataset.zoomTx;
+  delete piece.dataset.zoomTy;
+  delete piece.dataset.zoomScale;
+
+  if (piece.dataset.flip === 'rise') {
+    const envelope = piece.querySelector('.envelope, .envelope--mailer');
+    if (envelope) closeEnvelope(envelope);
+  }
+
+  setTransform(piece);
+  if (zoomBackdrop) zoomBackdrop.classList.remove('is-visible');
+  if (zoomedPiece === piece) zoomedPiece = null;
+
+  if (toss) {
+    sendToDrawer(piece);
+  } else {
+    piece.style.zIndex = piece.dataset.baseZ || '';
+  }
 }
 
-// ── PIECE CLICK ───────────────────────────────────────────────────────────────
+function toggleFlip(piece) {
+  if (!piece.dataset.flip) return;
+  const flipped = piece.classList.toggle('is-flipped');
+  const flipBtn = piece.querySelector('.zoom-flip-btn');
+  if (flipBtn) flipBtn.setAttribute('aria-pressed', flipped ? 'true' : 'false');
+}
 
-function onPieceClick(e) {
-  const piece = e.currentTarget;
-
+// Shared tap-routing for every click entry point below: not zoomed -> zoom
+// in; zoomed and flippable -> flip. (Closing/tossing happens via the
+// backdrop, Escape, or the explicit zoom-controls buttons, not via tap.)
+function onPieceTap(piece, e) {
   if (piece._suppressClick) {
     piece._suppressClick = false;
     return;
   }
+  if (piece.classList.contains('is-zoomed')) {
+    toggleFlip(piece);
+    return;
+  }
+  enterZoom(piece);
+}
 
-  // Let child-element click handlers take precedence
+
+
+// ── PIECE CLICK ───────────────────────────────────────────────────────────────
+// Generic fallback for shapes with no dedicated front-element binding above
+// (cd-sleeve, kraft-mailer, valpak, summons, greeting-card-seasonal, and
+// every single-sided Bucket B piece — clippings, notes, photos, menu,
+// circular, desk objects). Those still zoom on tap; they just have no
+// dataset.flip, so onPieceTap's toggleFlip() call is a no-op for them.
+
+function onPieceClick(e) {
+  const piece = e.currentTarget;
+
+  // Let more specific handlers (envelope flap, postcard, mailer front,
+  // letter-peek) take precedence — they call onPieceTap themselves.
   if (
     e.target.closest('.envelope-front')         ||
     e.target.closest('.envelope-front--mailer') ||
     e.target.closest('.postcard')               ||
-    e.target.closest('.letter-peek')
+    e.target.closest('.letter-peek')            ||
+    e.target.closest('.zoom-controls')
   ) return;
 
-  // Prefer a designated overlay-content container so the overlay shows only
-  // the intended "zoomed" view rather than the full piece interior.
-  // Any element tagged [data-overlay-content] in the piece's HTML opts in;
-  // pieces without it fall back to piece.innerHTML (existing behaviour).
-  const overlayContent = piece.querySelector('[data-overlay-content]');
-  const html  = overlayContent ? overlayContent.innerHTML : piece.innerHTML;
-  const type  = overlayContent
-    ? (overlayContent.dataset.overlayType || 'piece')
-    : 'piece';
-  openOverlay(html, type, piece);
+  onPieceTap(piece, e);
 }
 
 function bindPieceClick(piece) {
@@ -578,7 +663,6 @@ function init() {
 
   bindPullTabs(canvas);
   canvas.querySelectorAll('.barcode[data-zip]').forEach(generateBarcode);
-  buildOverlay();
 
   if (canvas.classList.contains('canvas--pile')) {
     refreshLiftable(canvas);

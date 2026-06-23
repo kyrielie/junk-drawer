@@ -77,6 +77,7 @@
   --transition-lift:    box-shadow 0.18s ease, filter 0.18s ease;
   --transition-flap:    transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-peek:    transform 0.55s cubic-bezier(0.34, 1.06, 0.64, 1);
+  --transition-zoom:    transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-overlay: opacity 0.22s ease, visibility 0s linear 0s;
 
   /* ── Spacing ──────────────────────────────────────────────────────────── */
@@ -199,6 +200,158 @@ a {
 #drawer-pile .mail-piece.is-decorative-object.is-dragging {
   box-shadow: none;
   filter: drop-shadow(6px 9px 7px rgba(80, 55, 30, 0.55));
+}
+
+/* ── ZOOM & FLIP ──────────────────────────────────────────────────────────────
+   Replaces the old #letter-overlay modal. A tapped piece stays exactly
+   where it is in the DOM (#canvas or #drawer-pile) — setTransform() (in
+   rustle.js) just swaps its rotate()/translateY() for a translate()/scale()
+   that grows it toward the viewport center, which is what makes this
+   animatable through the existing transform-transition machinery instead
+   of needing position:fixed + getBoundingClientRect gymnastics.            */
+
+#zoom-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(40, 28, 14, 0.55);
+  z-index: 9000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+
+#zoom-backdrop.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mail-piece.is-zoomed {
+  transition: var(--transition-zoom), var(--transition-lift);
+  z-index: 9500;
+  cursor: pointer;
+}
+
+.mail-piece.is-zoomed:active {
+  cursor: grabbing;
+}
+
+/* Small control cluster (flip / send-to-drawer) anchored to the zoomed
+   piece itself. It inherits the piece's transform:scale() like any other
+   descendant would — that's fine here, the buttons end up proportionally
+   bigger along with the enlarged piece rather than staying a fixed size. */
+.zoom-controls {
+  position: absolute;
+  left: 50%;
+  bottom: -52px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--space-sm);
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.zoom-flip-btn,
+.zoom-send-btn {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: var(--color-ink-black);
+  background: var(--color-paper-white);
+  border: 1px solid rgba(80, 55, 30, 0.35);
+  border-radius: 3px;
+  padding: 6px 12px;
+  cursor: pointer;
+  box-shadow: var(--shadow-paper);
+}
+
+.zoom-flip-btn:hover,
+.zoom-send-btn:hover,
+.zoom-flip-btn:focus-visible,
+.zoom-send-btn:focus-visible {
+  background: var(--color-aged-paper);
+}
+
+/* ── Generic 3D flip — shape ROTATE ──────────────────────────────────────────
+   Additive .piece-front/.piece-back markers (added in mail/*.html alongside
+   each family's own classes — .postcard-front, .cd-sleeve__back, etc.) let
+   one rule pair drive every rotate-shape family, instead of writing the
+   same backface-visibility/rotateY pair six times. Scoped to .is-zoomed so
+   it has zero effect on how any of these look at rest in the pile. */
+.mail-piece.is-zoomed .piece-front,
+.mail-piece.is-zoomed .piece-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mail-piece.is-zoomed .piece-back {
+  transform: rotateY(180deg);
+}
+
+.mail-piece.is-zoomed.is-flipped .piece-front {
+  transform: rotateY(180deg);
+}
+
+.mail-piece.is-zoomed.is-flipped .piece-back {
+  transform: rotateY(0deg);
+}
+
+/* Perspective + 3D context for every rotate-shape root. .postcard already
+   has its own (kept, see css §6) — these five are the ones that needed it
+   added. Scoped to .is-zoomed for the same reason as above. */
+.mail-piece.is-zoomed .cd-sleeve,
+.mail-piece.is-zoomed .kraft-mailer,
+.mail-piece.is-zoomed .summons,
+.mail-piece.is-zoomed .greeting-card-seasonal,
+.mail-piece.is-zoomed .valpak,
+.mail-piece.is-zoomed .ad-postcard {
+  position: relative;
+  perspective: 1400px;
+  transform-style: preserve-3d;
+  /* summons/greeting-card-seasonal have no explicit height normally (their
+     front face sizes them via normal flow) — pin one here so the
+     absolutely-positioned .piece-front/.piece-back (above) have a box to
+     fill instead of collapsing to 0 height. */
+  height: 420px;
+}
+
+/* greeting-card-seasonal's front/inside had no hide-by-default rule at all
+   (both rendered stacked, all the time) — give it the same display:none
+   convention every other family already uses, only relevant once zoomed. */
+.greeting-card-seasonal__inside {
+  display: none;
+}
+.mail-piece.is-zoomed .greeting-card-seasonal__inside {
+  display: block;
+}
+.mail-piece.is-zoomed .summons__interior {
+  display: block;
+}
+
+/* ── Rise shape — expand the letter/card/invoice to fill the back face ──────
+   openEnvelope()/closeEnvelope() (unchanged, rustle.js) still drive the
+   flap-open + letter-rise flourish on zoom-enter — this is the *second*
+   beat after that, once the piece is flipped: .piece-back (added onto
+   .letter-content in mail/*.html) goes from its small risen-peek size to
+   filling the zoomed box. */
+.mail-piece.is-zoomed .piece-back.letter-content {
+  display: block;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(24px) scale(0.92);
+  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.06, 0.64, 1);
+  pointer-events: none;
+  background: var(--color-paper-white);
+  overflow-y: auto;
+  padding: var(--space-lg);
+}
+
+.mail-piece.is-zoomed.is-flipped .piece-back.letter-content {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
 }
 
 
@@ -1043,141 +1196,8 @@ a {
 .handwritten--blue     { color: rgba(30, 60, 120, 0.85); }
 
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   17. LETTER OVERLAY (modal — Option B)
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-#letter-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-xl);
-  background: rgba(60, 38, 18, 0.72);
-  backdrop-filter: blur(3px);
-  opacity: 0;
-  visibility: hidden;
-  transition: var(--transition-overlay);
-}
-
-#letter-overlay.is-visible {
-  opacity: 1;
-  visibility: visible;
-}
-
-.overlay-body {
-  position: relative;
-  background-color: var(--color-paper-white);
-  border-radius: 2px;
-  max-width: 620px;
-  width: 100%;
-  max-height: 88vh;
-  overflow-y: auto;
-  box-shadow: var(--shadow-overlay);
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent         0px,
-    transparent         27px,
-    rgba(80,55,30,0.07) 27px,
-    rgba(80,55,30,0.07) 28px
-  );
-  background-position: 0 20px;
-}
-
-.overlay-close {
-  position: absolute;
-  top: var(--space-sm);
-  right: var(--space-sm);
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(80, 55, 30, 0.10);
-  color: var(--color-ink-black);
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s ease;
-  z-index: 2;
-}
-
-.overlay-close:hover { background: rgba(80, 55, 30, 0.22); }
-
-.overlay-body .letter--official { padding: var(--space-xl); }
-
-/* ── OVERLAY: REVEAL HIDDEN CONTENT ─────────────────────────────────────────
-   Mail piece elements that are hidden on the desk (display:none) should be
-   visible when promoted into the overlay. Two mechanisms:
-
-   1. Explicit data-attribute — preferred for new pieces. Add
-      data-overlay-show to any element that should reveal itself in overlay.
-   2. Known class list — covers existing pieces without needing HTML edits.    */
-
-.overlay-body [data-overlay-show]            { display: block; }
-
-/* display:block is correct for these — none of them are flex containers
-   in their normal (non-overlay) context. */
-.overlay-body[data-overlay-type="piece"] .letter-content,
-.overlay-body[data-overlay-type="piece"] .summons__interior   { display: block; }
-
-/* These ARE flex containers (flex-direction:column, or children relying on
-   flex:1) in their normal context — display:block would silently drop that
-   layout once revealed, so they need their real display value restored.
-   .postcard-back is intentionally NOT listed here: every .postcard is
-   bound by bindPostcard()/onPostcardClick(), which always opens the
-   dedicated [data-overlay-type="postcard"] overlay (handled separately
-   below) and only ever copies .postcard-back's *innerHTML* into it — the
-   .postcard-back element itself never reaches a [data-overlay-type="piece"]
-   overlay, so a rule for it here would be unreachable dead code. */
-.overlay-body[data-overlay-type="piece"] .ad-postcard__back,
-.overlay-body[data-overlay-type="piece"] .cd-sleeve__back,
-.overlay-body[data-overlay-type="piece"] .kraft-mailer__interior { display: flex; }
-
-/* ── POSTCARD OVERLAY ────────────────────────────────────────────────────────
-   Postcard back shown in overlay — readable size, no ruled lines            */
-
-.overlay-body[data-overlay-type="postcard"] {
-  max-width: 680px;
-  background-color: var(--color-paper-white);
-  /* Postcards are not ruled paper */
-  background-image: none;
-}
-
-/* Re-use .postcard-back layout but remove the desk-side rotateY */
-.overlay-body[data-overlay-type="postcard"] .postcard-back {
-  transform: none;
-  display: flex;
-  min-height: 340px;
-  padding: var(--space-xl);
-  gap: 0;
-  position: relative;
-}
-
-/* Scale handwriting up to a comfortable reading size */
-.overlay-body[data-overlay-type="postcard"] .handwritten {
-  font-size: 1.05rem;
-  line-height: 1.7;
-}
-
-/* Address column: override any absolute positioning from the desk layout */
-.overlay-body[data-overlay-type="postcard"] .postcard-address-col {
-  position: relative;
-}
-
-/* Margin note: un-rotate so it reads horizontally in the overlay */
-.overlay-body[data-overlay-type="postcard"] .handwritten--margin-note {
-  position: static;
-  transform: none;
-  writing-mode: horizontal-tb;
-  font-size: 0.8rem;
-  opacity: 0.7;
-  margin-top: var(--space-sm);
-  white-space: normal;
-  max-width: none;
-}
+/* Section 17 (LETTER OVERLAY) retired — replaced by the ZOOM & FLIP system,
+   see the rules added near .mail-piece.is-decorative-object above. */
 
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -1210,7 +1230,6 @@ a {
   .envelope-flap  { transition: none; }
   .letter-peek    { transition: none; }
   .mail-piece     { transition: none; }
-  #letter-overlay { transition: none; }
 
   .envelope.is-open .envelope-flap { transform: rotateX(-90deg); }
   .envelope.is-open .letter-peek   { transform: translateY(-88px); }
@@ -1222,8 +1241,8 @@ a {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 @media print {
-  #letter-overlay,
-  .overlay-close  { display: none !important; }
+  #zoom-backdrop,
+  .zoom-controls  { display: none !important; }
 
   #canvas {
     min-height: auto;
@@ -2320,65 +2339,8 @@ body::after {
 }
 
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   29. OVERLAY — "Send to Desktop" button
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-.overlay-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-  padding: var(--space-md) var(--space-xl);
-  border-top: 1px solid rgba(80, 55, 30, 0.10);
-  background: rgba(242, 236, 216, 0.4);
-  border-radius: 0 0 2px 2px;
-}
-
-.btn-send-desktop {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-xs);
-  padding: 7px var(--space-md);
-  background: var(--color-usps-blue);
-  color: var(--color-paper-white);
-  font-family: var(--font-body);
-  font-size: 0.72rem;
-  letter-spacing: 0.10em;
-  text-transform: uppercase;
-  border: none;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: background 0.15s ease, transform 0.12s ease;
-  box-shadow: 0 2px 6px rgba(0, 75, 135, 0.30);
-}
-
-.btn-send-desktop:hover {
-  background: #003a6b;
-  transform: translateY(-1px);
-}
-
-.btn-send-desktop:active {
-  transform: translateY(0);
-}
-
-.btn-send-desktop svg {
-  width: 13px;
-  height: 13px;
-  flex-shrink: 0;
-}
-
-/* Confirmation flash when piece is sent */
-.btn-send-desktop.sent {
-  background: #27ae60;
-  pointer-events: none;
-}
-
-.overlay-sent-label {
-  font-family: var(--font-body);
-  font-size: 0.7rem;
-  color: rgba(80, 55, 30, 0.55);
-  letter-spacing: 0.06em;
-}
+/* Section 29 ("Send to Desktop" overlay action bar) retired along with the
+   rest of the overlay system — see .zoom-controls / .zoom-send-btn above. */
 
 
 /* ═══════════════════════════════════════════════════════════════════════════

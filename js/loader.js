@@ -120,6 +120,10 @@ function buildPieceElement(innerHtml, entry) {
 
   wrap.style.transform = `rotate(${rot}deg)`;
 
+  if (entry.flip) {
+    wrap.dataset.flip = entry.flip; // 'rotate' | 'rise' — read by rustle.js's zoom/flip system
+  }
+
   if (entry.ariaLabel) {
     wrap.setAttribute('role', 'img');
     wrap.setAttribute('aria-label', entry.ariaLabel);

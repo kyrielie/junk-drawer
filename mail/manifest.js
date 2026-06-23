@@ -28,6 +28,7 @@ export const MANIFEST = [
     zIndex:        2,
     rotation:      -7,
     speed:         0,
+    flip:          'rotate',
     ariaLabel:     'Postcard from Edith Voss, postmarked March 1997',
   },
 
@@ -41,6 +42,7 @@ export const MANIFEST = [
     zIndex:        3,
     rotation:      11,
     speed:         0,
+    flip:          'rotate',
     ariaLabel:     'Postcard from Margot Reyes in Tucson, postmarked April 1997',
   },
 
@@ -54,6 +56,7 @@ export const MANIFEST = [
     zIndex:        4,
     rotation:      6,
     speed:         0,
+    flip:          'rise',
     ariaLabel:     'Notice envelope from Dale Pringle (landlord), postmarked June 1998',
   },
 
@@ -67,6 +70,7 @@ export const MANIFEST = [
     zIndex:        5,
     rotation:      -4,
     speed:         0,
+    flip:          'rise',
     ariaLabel:     'SunCoast Video padded mailer with VHS shipment, postmarked August 1998',
   },
 
@@ -80,6 +84,7 @@ export const MANIFEST = [
     zIndex:        6,
     rotation:      -12,
     speed:         0,
+    flip:          'rise',
     ariaLabel:     'Personal letter from T. Hargrove, postmarked January 1998',
   },
 
@@ -93,6 +98,7 @@ export const MANIFEST = [
     zIndex:        7,
     rotation:      8,
     speed:         0,
+    flip:          'rise',
     ariaLabel:     "Valentine's Day greeting card from Margot Reyes, postmarked February 1998",
   },
 
@@ -106,6 +112,7 @@ export const MANIFEST = [
     zIndex:        8,
     rotation:      3,
     speed:         0,
+    flip:          'rise',
     ariaLabel:     'Appointment reminder envelope from Ashford Family Dental, August 1997',
   },
 
@@ -121,6 +128,7 @@ export const MANIFEST = [
     zIndex:        9,
     rotation:      -9,
     speed:         0,
+    flip:          'rotate',
     ariaLabel:     'Promotional spring sale postcard from Pacific Garden Nursery, postmarked May 1997',
   },
 
@@ -134,6 +142,7 @@ export const MANIFEST = [
     zIndex:        10,
     rotation:      13,
     speed:         0,
+    flip:          'rotate',
     ariaLabel:     'AOL 100 Hours Free CD-ROM mailer, July 1997',
   },
 
@@ -147,6 +156,7 @@ export const MANIFEST = [
     zIndex:        11,
     rotation:      -2,
     speed:         0,
+    flip:          'rotate',
     ariaLabel:     'Columbia House Music Club CD shipment mailer, September 1997',
   },
 
@@ -160,6 +170,7 @@ export const MANIFEST = [
     zIndex:        12,
     rotation:      5,
     speed:         0,
+    flip:          'rise',
     ariaLabel:     'FirstCard Financial pre-approved credit card offer, October 1997',
   },
 
@@ -186,6 +197,7 @@ export const MANIFEST = [
     zIndex:        14,
     rotation:      -3,
     speed:         0,
+    flip:          'rotate',
     ariaLabel:     'Jackson County Circuit Court juror summons, March 1998',
   },
 
@@ -199,6 +211,7 @@ export const MANIFEST = [
     zIndex:        15,
     rotation:      9,
     speed:         0,
+    flip:          'rise',
     ariaLabel:     'Oregon Wildlife Alliance charitable solicitation envelope, September 1998',
   },
 
@@ -212,6 +225,7 @@ export const MANIFEST = [
     zIndex:        16,
     rotation:      -6,
     speed:         0,
+    flip:          'rotate',
     ariaLabel:     'ValPak coupon envelope, October 1998',
   },
 
@@ -225,6 +239,7 @@ export const MANIFEST = [
     zIndex:        17,
     rotation:      4,
     speed:         0,
+    flip:          'rise',
     ariaLabel:     'Wedding invitation from K. Albright and J. Mora, postmarked December 1998',
   },
 
@@ -259,6 +274,7 @@ export const MANIFEST = [
     zIndex:        19,
     rotation:      -14,
     speed:         0,
+    flip:          'rotate',
     ariaLabel:     'Scenic postcard from Edith Voss, October 1997',
   },
   {
@@ -319,6 +335,7 @@ export const MANIFEST = [
     zIndex:        24,
     rotation:      -1,
     speed:         0,
+    flip:          'rotate',
     ariaLabel:     'City postcard from T. Hargrove, July 1997',
   },
   {
@@ -355,6 +372,7 @@ export const MANIFEST = [
     zIndex:        27,
     rotation:      7,
     speed:         0,
+    flip:          'rise',
     ariaLabel:     'Airmail envelope from overseas sender',
   },
   {
@@ -391,6 +409,7 @@ export const MANIFEST = [
     zIndex:        30,
     rotation:      14,
     speed:         0,
+    flip:          'rotate',
     ariaLabel:     'Beach postcard from Margot Reyes, September 1997',
   },
   {
@@ -415,6 +434,7 @@ export const MANIFEST = [
     zIndex:        32,
     rotation:      -12.5,
     speed:         0,
+    flip:          'rotate',
     ariaLabel:     'Forest postcard, November 1997',
   },
   {
@@ -499,6 +519,7 @@ export const MANIFEST = [
     zIndex:        39,
     rotation:      7.5,
     speed:         0,
+    flip:          'rotate',
     ariaLabel:     'Seasonal greeting card from Dale Pringle, December 1998',
   },
   {
